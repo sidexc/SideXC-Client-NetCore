@@ -1,0 +1,105 @@
+{
+  "version": "4",
+  "lists": [
+    {
+      "title": "ASP.NET Core 3.1",
+      "roles": []
+    },
+    {
+      "title": "Welcome",
+      "href": "aspnetcore_welcome.html",
+      "icon": "fal fa-graduation-cap",
+      "roles": []
+    },
+    {
+      "title": "Authorization",
+      "icon": "fal fa-shield-alt",
+      "roles": [
+        "Administrator"
+      ],
+      "items": [
+        {
+          "title": "Users",
+          "href": "authorization_users.html",
+          "roles": []
+        },
+        {
+          "title": "Roles",
+          "href": "authorization_roles.html",
+          "roles": []
+        }
+      ]
+    },
+    {
+      "title": "Solution Overview",
+      "icon": "fal fa-folder-open",
+      "roles": [],
+      "items": [
+        {
+          "title": "Editions",
+          "showOnSeed": false,
+          "href": "aspnetcore_editions.html",
+          "roles": []
+        },
+        {
+          "title": "FAQ",
+          "href": "aspnetcore_faq.html",
+          "roles": []
+        },
+        {
+          "title": "Interactive",
+          "showOnSeed": false,
+          "href": "aspnetcore_interactive.html",
+          "roles": []
+        }
+      ]
+    },
+    {
+      "title": "Documentation",
+      "icon": "fal fa-book",
+      "roles": [],
+      "items": [
+        {
+          "title": "Introduction",
+          "href": "documentation_introduction.html",
+          "roles": []
+        },
+        {
+          "title": "Getting Started",
+          "href": "documentation_getting_started.html",
+          "roles": []
+        },
+        {
+          "title": "Site Structure",
+          "href": "documentation_site_structure.html",
+          "roles": []
+        },
+        {
+          "title": "Solution Architecture",
+          "href": "documentation_solution_architecture.html",
+          "roles": []
+        },
+        {
+          "title": "Customizations",
+          "href": "documentation_customizations.html",
+          "roles": []
+        },
+        {
+          "title": "Howto Contribute",
+          "href": "documentation_howto_contribute.html",
+          "roles": []
+        },
+        {
+          "title": "Licensing Information",
+          "href": "documentation_licensing_information.html",
+          "roles": []
+        },
+        {
+          "title": "Changelog",
+          "href": "documentation_changelog.html",
+          "roles": []
+        }
+      ]
+    }
+  ]
+}
