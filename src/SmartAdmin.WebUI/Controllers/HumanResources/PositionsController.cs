@@ -58,6 +58,11 @@ namespace SideXC.WebUI.Controllers.HumanResources
         {
             if (ModelState.IsValid)
             {
+                position.Active = true;
+                position.Created = DateTime.Now;
+                position.CreatedBy = null;//Comms:Modificar a que sea variable
+                position.Modified = DateTime.Now;
+                position.ModifiedBy = null;//Comms:Modificar a que sea variable
                 _context.Add(position);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,6 +102,7 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 try
                 {
+                    position.Modified = DateTime.Now;
                     _context.Update(position);
                     await _context.SaveChangesAsync();
                 }

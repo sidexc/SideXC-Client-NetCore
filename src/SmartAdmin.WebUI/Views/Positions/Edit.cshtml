@@ -1,48 +1,58 @@
 ﻿@model SideXC.WebUI.Models.Human_Resources.Position
 
+
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Positions - Edit Item";
 }
 
-<h1>Edit</h1>
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Human Resources</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Positions")">Positions</a></li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Edit Item
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <input type="hidden" asp-for="Id" />
+                                    <label asp-for="Description" class="control-label font-weight-bold"></label>
+                                    <input asp-for="Description" class="form-control form-control-sm" required />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" asp-for="Active">
+                                        <label class="custom-control-label" for="Active">Status</label>
+                                    </div>
+                                </div>
+                            </div>
 
-<h4>Position</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                            <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Modified" class="control-label"></label>
-                <input asp-for="Modified" class="form-control" />
-                <span asp-validation-for="Modified" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</main>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

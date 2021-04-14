@@ -6,13 +6,13 @@
       "roles": []
     },
     {
-      "title": "Welcome",
+      "title": "Home",
       "href": "aspnetcore_welcome.html",
-      "icon": "fal fa-graduation-cap",
+      "icon": "fal fa-home",
       "roles": []
     },
     {
-      "title": "Authorization",
+      "title": "Security",
       "icon": "fal fa-shield-alt",
       "roles": [
         "Administrator"
@@ -20,35 +20,33 @@
       "items": [
         {
           "title": "Users",
-          "href": "authorization_users.html",
+          "href": "ClientUsers_Index.cshtml",
           "roles": []
         },
         {
-          "title": "Roles",
-          "href": "authorization_roles.html",
+          "title": "Profiles",
+          "href": "Profiles_Index.cshtml",
           "roles": []
         }
       ]
     },
     {
-      "title": "Solution Overview",
-      "icon": "fal fa-folder-open",
+      "title": "Human Resources",
+      "icon": "fal fa-users-class",
       "roles": [],
       "items": [
         {
-          "title": "Editions",
-          "showOnSeed": false,
-          "href": "aspnetcore_editions.html",
+          "title": "Employee Types",
+          "href": "EmployeeTypes_Index.html",
           "roles": []
         },
         {
-          "title": "FAQ",
-          "href": "aspnetcore_faq.html",
+          "title": "Positions",
+          "href": "Positions_Index.html",
           "roles": []
         },
         {
-          "title": "Interactive",
-          "showOnSeed": false,
+          "title": "Employees",
           "href": "aspnetcore_interactive.html",
           "roles": []
         }

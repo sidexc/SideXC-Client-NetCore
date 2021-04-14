@@ -10,22 +10,22 @@ using SideXC.WebUI.Models.Human_Resources;
 
 namespace SideXC.WebUI.Controllers.HumanResources
 {
-    public class EmployeeTypesController : Controller
+    public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EmployeeTypesController(ApplicationDbContext context)
+        public EmployeesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: EmployeeTypes
+        // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EmployeeTypes.ToListAsync());
+            return View(await _context.Employees.ToListAsync());
         }
 
-        // GET: EmployeeTypes/Details/5
+        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,44 +33,39 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 return NotFound();
             }
 
-            var employeeType = await _context.EmployeeTypes
+            var employee = await _context.Employees
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employeeType == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(employeeType);
+            return View(employee);
         }
 
-        // GET: EmployeeTypes/Create
+        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EmployeeTypes/Create
+        // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Create([Bind("Id,Name,LastName1,LastName2,PhotUrl,GrossSalary,NetSalary,DailySalary,IntegratedDailySalary,Active,Created,Modified")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                employeeType.Active = true;
-                employeeType.Created = DateTime.Now;
-                employeeType.CreatedBy = null;//Comms:Modificar a que sea variable
-                employeeType.Modified = DateTime.Now;
-                employeeType.ModifiedBy = null;//Comms:Modificar a que sea variable
-                _context.Add(employeeType);
+                _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(employee);
         }
 
-        // GET: EmployeeTypes/Edit/5
+        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,22 +73,22 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 return NotFound();
             }
 
-            var employeeType = await _context.EmployeeTypes.FindAsync(id);
-            if (employeeType == null)
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            return View(employeeType);
+            return View(employee);
         }
 
-        // POST: EmployeeTypes/Edit/5
+        // POST: Employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName1,LastName2,PhotUrl,GrossSalary,NetSalary,DailySalary,IntegratedDailySalary,Active,Created,Modified")] Employee employee)
         {
-            if (id != employeeType.Id)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -102,13 +97,12 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 try
                 {
-                    employeeType.Modified = DateTime.Now;
-                    _context.Update(employeeType);
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeTypeExists(employeeType.Id))
+                    if (!EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -119,10 +113,10 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(employee);
         }
 
-        // GET: EmployeeTypes/Delete/5
+        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,30 +124,30 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 return NotFound();
             }
 
-            var employeeType = await _context.EmployeeTypes
+            var employee = await _context.Employees
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employeeType == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(employeeType);
+            return View(employee);
         }
 
-        // POST: EmployeeTypes/Delete/5
+        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employeeType = await _context.EmployeeTypes.FindAsync(id);
-            _context.EmployeeTypes.Remove(employeeType);
+            var employee = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeTypeExists(int id)
+        private bool EmployeeExists(int id)
         {
-            return _context.EmployeeTypes.Any(e => e.Id == id);
+            return _context.Employees.Any(e => e.Id == id);
         }
     }
 }

@@ -30,12 +30,18 @@
                         <form asp-action="Edit">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12 mb-3">
+                                    <input type="hidden" asp-for="Id" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
-
+                                <div class="col-md-12 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" asp-for="Active">
+                                        <label class="custom-control-label" for="Active">Status</label>
+                                    </div>
+                                </div>
                             </div>
 
                             <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>

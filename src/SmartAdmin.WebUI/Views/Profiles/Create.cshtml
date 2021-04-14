@@ -1,7 +1,7 @@
 ﻿@model SideXC.WebUI.Models.Security.Profile
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Profile - New Item";
 }
 
 
@@ -32,7 +32,7 @@
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
-                                    <input asp-for="Description" class="form-control form-control-sm" required />
+                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off"/>
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
 
