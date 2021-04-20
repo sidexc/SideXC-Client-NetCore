@@ -1,14 +1,15 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Human_Resources.EmployeeType>
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.PaymentMethod>
 
 @{
-    ViewData["Title"] = "Employee Types";
+    ViewData["Title"] = "Inventory Catalog - Payment Methods";
 }
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active">Employee Type</li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active">Payment Methods</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -33,9 +34,8 @@
                                     <th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Description)
-                                    </th>
+                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th>Number Of Days</th>
                                     <th class="text-center">
                                         @Html.DisplayNameFor(model => model.Active)
                                     </th>
@@ -50,23 +50,22 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td id="tdBtn" class="text-center">
-                                        <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Description" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td class="text-center">
-                                        @Html.DisplayFor(modelItem => item.Active)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Created)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Modified)
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td id="tdBtn" class="text-center">
+                                            <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Description" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.NumberOfDays)</td>
+                                        <td class="text-center">
+                                            @Html.DisplayFor(modelItem => item.Active)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Modified)
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -86,7 +85,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 4);
+            _ConvertToDatatableWithButtons("tableReport", "PaymentMethodFile", 5);
         });
     </script>
 }

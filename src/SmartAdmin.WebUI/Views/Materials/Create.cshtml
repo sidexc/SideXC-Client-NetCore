@@ -1,0 +1,77 @@
+﻿@model SideXC.WebUI.Models.Inventory.Material
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@{
+    ViewData["Title"] = "Materials - New Item";
+}
+
+@Html.AntiForgeryToken()
+
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Materials")">Materials</a></li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        New Item
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <input asp-for="Description" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="StandardCost" class="control-label">Standard Cost</label>
+                                    <input asp-for="StandardCost" class="form-control form-control-sm" />
+                                    <span asp-validation-for="StandardCost" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="MOQ" class="control-label"></label>
+                                    <input asp-for="MOQ" class="form-control form-control-sm" />
+                                    <span asp-validation-for="MOQ" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="LeadTime" class="control-label">Lead Time</label>
+                                    <input asp-for="LeadTime" class="form-control form-control-sm" />
+                                    <span asp-validation-for="LeadTime" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

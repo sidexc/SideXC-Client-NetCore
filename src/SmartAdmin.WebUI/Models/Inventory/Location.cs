@@ -13,6 +13,7 @@ namespace SideXC.WebUI.Models.Inventory
         public int Id { get; set; }
         [StringLength(100, ErrorMessage = "Please type a valid description.")]
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
         public string Description { get; set; }
         public virtual Hallway Hallway { get; set; }
         public bool Active { get; set; }

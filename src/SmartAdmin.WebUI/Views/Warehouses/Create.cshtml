@@ -1,15 +1,16 @@
-﻿@model SideXC.WebUI.Models.Human_Resources.EmployeeType
+﻿@model SideXC.WebUI.Models.Inventory.Warehouse
 
 @{
-    ViewData["Title"] = "Employee Type - New Item";
+    ViewData["Title"] = "Warehouse - New Item";
 }
 
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "EmployeeTypes")">Employee Types</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Warehouses")">Warehouse</a></li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -31,7 +32,7 @@
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
-                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off"/>
+                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
 

@@ -1,15 +1,17 @@
-﻿@model SideXC.WebUI.Models.Human_Resources.EmployeeType
+﻿@model SideXC.WebUI.Models.Inventory.TransactionType
 
 @{
-    ViewData["Title"] = "Employee Type - New Item";
+    ViewData["Title"] = "Transaction Types - New Item";
 }
 
+@Html.AntiForgeryToken()
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "EmployeeTypes")">Employee Types</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "TransactionTypes")">Transaction Types</a></li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -29,12 +31,23 @@
                         <form asp-action="Create">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
-                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off"/>
+                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
-
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Code" class="control-label"></label>
+                                    <input asp-for="Code" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Sign" class="control-label"></label>
+                                    <select asp-for="Sign" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Signs,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                    <span asp-validation-for="Sign" class="text-danger"></span>
+                                </div>
                             </div>
 
                             <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>

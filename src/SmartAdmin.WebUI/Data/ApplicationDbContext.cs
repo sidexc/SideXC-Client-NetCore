@@ -31,7 +31,7 @@ namespace SideXC.WebUI.Data
         public virtual DbSet<Position> Positions { get; set; }        
         //Inventory
         public virtual DbSet<Currency> Currencies { get; set; }
-        public virtual DbSet<Employee> Hallways { get; set; }
+        public virtual DbSet<Hallway> Hallways { get; set; }
         public virtual DbSet<Inventory> Inventories { get; set; }
         public virtual DbSet<InventoryLog> InventoriesLogs { get; set; }
         public virtual DbSet<Location> Locations { get; set; }

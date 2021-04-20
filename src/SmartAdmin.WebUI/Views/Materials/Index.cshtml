@@ -1,14 +1,14 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Human_Resources.EmployeeType>
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.Material>
 
 @{
-    ViewData["Title"] = "Employee Types";
+    ViewData["Title"] = "Inventory - Materials";
 }
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active">Employee Type</li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active">Materials</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -33,18 +33,17 @@
                                     <th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Description)
-                                    </th>
-                                    <th class="text-center">
-                                        @Html.DisplayNameFor(model => model.Active)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Created)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Modified)
-                                    </th>
+                                    <th>Name</th>
+                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th>Standard Cost</th>
+                                    <th>@Html.DisplayNameFor(model => model.MOQ)</th>
+                                    <th>Unit Meassure</th>
+                                    <th>Material Type</th>
+                                    <th>Lead Time</th>
+                                    <th>Supplier Name @*Add Detail in link*@</th>
+                                    <th>@Html.DisplayNameFor(model => model.Active)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Created)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Modified)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,20 +51,19 @@
                                 {
                                 <tr>
                                     <td id="tdBtn" class="text-center">
-                                        <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Description" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
+                                        <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Name" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td class="text-center">
-                                        @Html.DisplayFor(modelItem => item.Active)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Created)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Modified)
-                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.StandardCost)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MOQ)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.UnitMeassure.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MaterialType.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.LeadTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Supplier.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modified)</td>
                                 </tr>
                                 }
                             </tbody>
@@ -86,7 +84,8 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 4);
+            _ConvertToDatatableWithButtons("tableReport", "MaterialsFile", 7);
         });
     </script>
 }
+

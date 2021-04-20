@@ -2,10 +2,6 @@
   "version": "4",
   "lists": [
     {
-      "title": "ASP.NET Core 3.1",
-      "roles": []
-    },
-    {
       "title": "Home",
       "href": "aspnetcore_welcome.html",
       "icon": "fal fa-home",
@@ -47,54 +43,60 @@
         },
         {
           "title": "Employees",
-          "href": "aspnetcore_interactive.html",
+          "href": "Employees_Index.html",
           "roles": []
         }
       ]
     },
     {
-      "title": "Documentation",
-      "icon": "fal fa-book",
+      "title": "Inventory",
+      "icon": "fal fa-warehouse",
       "roles": [],
       "items": [
         {
-          "title": "Introduction",
-          "href": "documentation_introduction.html",
+          "title": "Catalogs",
+          "roles": [],
+          "items": [
+            {
+              "title": "Warehouse",
+              "href": "Warehouses_Index.html",
+              "roles": []
+            },
+            {
+              "title": "Hallway",
+              "href": "Hallways_Index.html",
+              "roles": []
+            },
+            {
+              "title": "Locations",
+              "href": "Locations_Index.html",
+              "roles": []
+            },
+            {
+              "title": "Material Types",
+              "href": "MaterialTypes_Index.html",
+              "roles": []
+            },
+            {
+              "title": "Transaction Types",
+              "href": "TransactionTypes_Index.html",
+              "roles": []
+            },
+            {
+              "title": "Payment Methods",
+              "href": "PaymentMethods_Index.html",
+              "roles": []
+            }
+          ]
+        },
+        {
+          "title": "Suppliers",
+          "href": "Suppliers_Index.html",
           "roles": []
         },
         {
-          "title": "Getting Started",
-          "href": "documentation_getting_started.html",
-          "roles": []
-        },
-        {
-          "title": "Site Structure",
-          "href": "documentation_site_structure.html",
-          "roles": []
-        },
-        {
-          "title": "Solution Architecture",
-          "href": "documentation_solution_architecture.html",
-          "roles": []
-        },
-        {
-          "title": "Customizations",
-          "href": "documentation_customizations.html",
-          "roles": []
-        },
-        {
-          "title": "Howto Contribute",
-          "href": "documentation_howto_contribute.html",
-          "roles": []
-        },
-        {
-          "title": "Licensing Information",
-          "href": "documentation_licensing_information.html",
-          "roles": []
-        },
-        {
-          "title": "Changelog",
-          "href": "documentation_changelog.html",
+          "title": "Materials",
+          "href": "Materials_Index.html",
           "roles": []
         }
       ]

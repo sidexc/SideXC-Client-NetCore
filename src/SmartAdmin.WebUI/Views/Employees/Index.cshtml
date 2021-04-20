@@ -1,95 +1,141 @@
 ﻿@model IEnumerable<SideXC.WebUI.Models.Human_Resources.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Employees";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhotUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GrossSalary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NetSalary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DailySalary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IntegratedDailySalary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Modified)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhotUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GrossSalary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NetSalary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DailySalary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IntegratedDailySalary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Modified)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Human Resources</li>
+        <li class="breadcrumb-item active">Employee Type</li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Information
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+
+                        <!-- datatable start -->
+                        <table id="tableReport">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
+                                    </th>
+                                    <th>
+                                        Employee Number
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Name)
+                                    </th>
+                                    <th>
+                                        Last Name 1
+                                    </th>
+                                    <th>
+                                        Last Name 2
+                                    </th>
+                                    <th>
+                                        Picture
+                                    </th>
+                                    <th>
+                                        Gross Salary
+                                    </th>
+                                    <th>
+                                        Net Salary
+                                    </th>
+                                    <th>
+                                        Daily Salary
+                                    </th>
+                                    <th>
+                                        Integrated Daily Salary
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Active)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Created)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Modified)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td id="tdBtn" class="text-center">
+                                        <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Name" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmployeeNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LastName1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LastName2)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhotUrl)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.GrossSalary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NetSalary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DailySalary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IntegratedDailySalary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Active)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Modified)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section ScriptsBlock {
+    <script src="~/js/utilities/common.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 4);
+        });
+    </script>
 }
-    </tbody>
-</table>

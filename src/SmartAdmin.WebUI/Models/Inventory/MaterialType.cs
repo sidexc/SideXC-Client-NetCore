@@ -13,11 +13,15 @@ namespace SideXC.WebUI.Models.Inventory
         public int Id { get; set; }
         [StringLength(100, ErrorMessage = "Please type a valid description.")]
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
         public string Description { get; set; }
         [StringLength(3, ErrorMessage = "Please type a valid Code.")]
         [MaxLength(3, ErrorMessage = "Maximum lenth is 3 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
         public string Code { get; set; }
+        [Required(ErrorMessage = "Required.")]
         public double MinimunRange { get; set; }
+        [Required(ErrorMessage = "Required.")]
         public double MaximunRange { get; set; }
         public bool Active { get; set; }
         public DateTime Created { get; set; }

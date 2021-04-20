@@ -1,0 +1,103 @@
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.Supplier>
+
+@{
+    ViewData["Title"] = "Inventory - Suppliers";
+}
+
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active">Suppliers</li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Information
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+
+                        <!-- datatable start -->
+                        <table id="tableReport">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
+                                    </th>
+                                    <th>Contact Name</th>
+                                    <th>@Html.DisplayNameFor(model => model.RFC)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Email)</th>
+                                    <th>Payment Day</th>
+                                    <th>Paymeny Method</th>
+                                    <th>Currency</th>
+                                    <th>@Html.DisplayNameFor(model => model.Active)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Created)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Modified)</th>
+                                    <th>Street</th>
+                                    <th>Internal Number</th>
+                                    <th>External Number</th>
+                                    <th>Zip Code</th>
+                                    <th>Neighborhood</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Country</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td id="tdBtn" class="text-center">
+                                        <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Name" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.RFC)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PaymentDay)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PaymentMethod.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Currency.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modified)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Street)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.InternalNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.ExternalNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.ZipCode)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.State.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.State.Country.Description)</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section ScriptsBlock {
+    <script src="~/js/utilities/common.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            _ConvertToDatatableWithButtons("tableReport", "SuppliersFile", 9);
+        });
+    </script>
+}
+

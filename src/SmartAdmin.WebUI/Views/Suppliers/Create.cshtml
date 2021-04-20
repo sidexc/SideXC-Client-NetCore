@@ -1,13 +1,16 @@
-﻿@model SideXC.WebUI.Models.Human_Resources.Employee
+﻿@model SideXC.WebUI.Models.Inventory.Supplier
 
 @{
-    ViewData["Title"] = "Employees - New Item";
+    ViewData["Title"] = "Supplier - New Item";
 }
+
+@Html.AntiForgeryToken()
+
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Employees")">Employees</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Suppliers")">Suppliers</a></li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -33,68 +36,52 @@
                                     <div id="smartwizard">
                                         <ul>
                                             <li><a href="#step-1">General Data</a></li>
-                                            <li><a href="#step-2">Salary</a></li>
-                                            <li><a href="#step-3">Address</a></li>
-                                            <li><a href="#step-4">User Account</a></li>
-                                            <li><a href="#step-5">Contacts</a></li>
+                                            <li><a href="#step-2">Address</a></li>
+                                            <li><a href="#step-3">Contacts</a></li>
                                         </ul>
                                         <div class="p-3">
                                             <div id="step-1" class="">
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
                                                         <label class="text-secondary">
-                                                            Please type the correct data for the new employee.
+                                                            Type the general information for this new Supplier.
                                                         </label>
                                                     </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="Name" class="control-label"></label>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label asp-for="Name" class="control-label">Supplier Name</label>
                                                         <input asp-for="Name" class="form-control form-control-sm" />
                                                         <span asp-validation-for="Name" class="text-danger"></span>
                                                     </div>
-                                                    <div class="col-md-3 mb-3">
-                                                        <label asp-for="LastName1" class="control-label">Last Name 1</label>
-                                                        <input asp-for="LastName1" class="form-control form-control-sm" />
-                                                        <span asp-validation-for="LastName1" class="text-danger"></span>
+                                                    <div class="col-md-2 mb-3">
+                                                        <label asp-for="RFC" class="control-label"></label>
+                                                        <input asp-for="RFC" class="form-control form-control-sm" />
+                                                        <span asp-validation-for="RFC" class="text-danger"></span>
                                                     </div>
-                                                    <div class="col-md-3 mb-3">
-                                                        <label asp-for="LastName2" class="control-label">Last Name 2</label>
-                                                        <input asp-for="LastName2" class="form-control form-control-sm" />
-                                                        <span asp-validation-for="LastName2" class="text-danger"></span>
+                                                    <div class="col-md-2 mb-3">
+                                                        <label asp-for="PaymentDay" class="control-label">Payment Day</label>
+                                                        <input asp-for="PaymentDay" class="form-control form-control-sm" />
+                                                        <span asp-validation-for="PaymentDay" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label asp-for="Email" class="control-label">Email Address</label>
+                                                        <input asp-for="Email" class="form-control form-control-sm" />
+                                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="PaymentMethod" class="control-label">Payement Method </label>
+                                                        <select asp-for="PaymentMethod" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.PaymentMethods,"Value", "Text"))">
+                                                            <option value="">-Please select one-</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="Currrency" class="control-label">Currency </label>
+                                                        <select asp-for="Currency" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Currencies,"Value", "Text"))">
+                                                            <option value="">-Please select one-</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div id="step-2" class="">
-
-                                                <div class="form-row">
-                                                    <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Please include the details for salary information.
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="GrossSalary" class="control-label">Gross Salary</label>
-                                                        <input asp-for="GrossSalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="GrossSalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="NetSalary" class="control-label">Net Salary</label>
-                                                        <input asp-for="NetSalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="NetSalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="DailySalary" class="control-label">Daily Salary</label>
-                                                        <input asp-for="DailySalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="DailySalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="IntegratedDailySalary" class="control-label">Integrated Daily Salary</label>
-                                                        <input asp-for="IntegratedDailySalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="IntegratedDailySalary" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="step-3" class="">
-
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
                                                         <label class="text-secondary">
@@ -103,27 +90,27 @@
                                                     </div>
                                                     <div class="col-md-6 mb-3">
                                                         <label for="txtStreet" class="control-label">Street</label>
-                                                        <input id="txtStreet" class="form-control form-control-sm" required />
+                                                        <input id="txtStreet" name="txtStreet" class="form-control form-control-sm" required />
                                                         <span validation-for="txtStreet" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtExternalNumber" class="control-label">External Number</label>
-                                                        <input id="txtExternalNumber" class="form-control form-control-sm" required />
+                                                        <input id="txtExternalNumber" name="txtExternalNumber" class="form-control form-control-sm" required />
                                                         <span validation-for="txtExternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtInternalNumber" class="control-label">Internal Number</label>
-                                                        <input id="txtInternalNumber" class="form-control form-control-sm" required />
+                                                        <input id="txtInternalNumber" name="txtInternalNumber" class="form-control form-control-sm" required />
                                                         <span validation-for="txtInternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtZipCode" class="control-label">Zip Code</label>
-                                                        <input id="txtZipCode" class="form-control form-control-sm" required />
+                                                        <input id="txtZipCode" name="txtZipCode" class="form-control form-control-sm" required />
                                                         <span validation-for="txtZipCode" class="text-danger"></span>
                                                     </div>
 
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="ZipCode" class="control-label">Neighborhood</label>
+                                                        <label for="ddColonia" class="control-label">Neighborhood</label>
                                                         <select class="form-control form-control-sm" name="ddColonia" id="ddColonia">
                                                             <option value="">-Please select one-</option>
                                                         </select>
@@ -141,36 +128,11 @@
                                                         <label for="lblPais" class="control-label">Country</label>
                                                         <label id="lblPais" class="form-control form-control-sm">---</label>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div id="step-4" class="">
-                                                <div class="form-row">
-                                                    <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Type a correct email to generate the user account.
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="ZipCode" class="control-label">Email Account</label>
-                                                        <input id="txtEmail" class="form-control form-control-sm" placeholder="user@domain.com" required />
-                                                        <span validation-for="txtEmail" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="txtPassword" class="control-label">Pasword [Auto-Generated]</label>
-                                                        <input type="text" id="txtPassword" class="form-control form-control-sm" value="@ViewBag.PasswordAutoGenerated" readonly>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="ClientUser" class="control-label">Profile </label>
-                                                        <select asp-for="ClientUser" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Profiles,"Value", "Text"))">
-                                                            <option value="">-Please select one-</option>
-                                                        </select>
-                                                    </div>
 
                                                 </div>
                                             </div>
-                                            <div id="step-5" class="">
+                                            <div id="step-3" class="">
                                                 <div class="form-row">
-
                                                 </div>
                                             </div>
                                         </div>
@@ -178,27 +140,7 @@
 
                                 </div>
 
-                                <div class="col-md-5 mb-3">
-                                    <label for="txtContactDescription" class="control-label">Description</label>
-                                    <input type="text" id="txtContactDescription" class="form-control form-control-sm" required>
-                                </div>
-                                <div class="col-md-5 mb-3">
-                                    <label for="ddContactType" class="control-label">Contact Type </label>
-                                    <select id="ddContactType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.ContactTypes,"Value", "Text"))">
-                                        <option value="">-Please select one-</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <br />
-                                    <a class="btn btn-sm btn-outline-secondary btn-pills" title="Add New Contact" onclick="AddNewContact()"><span class="fa fa-plus"></span> </a>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <div class="row" id="divContacts"></div>
-
-
-                                </div>
                             </div>
-
 
                             <button class="btn btn-info" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
                         </form>
@@ -214,6 +156,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
     <script src="js/formplugins/smartwizard/smartwizard.js"></script>
     <script src="~/js/utilities/common.js"></script>
 
@@ -329,3 +272,4 @@
     </script>
 
 }
+

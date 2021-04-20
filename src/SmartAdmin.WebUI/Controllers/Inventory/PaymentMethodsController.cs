@@ -6,53 +6,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SideXC.WebUI.Data;
-using SideXC.WebUI.Models.Human_Resources;
+using SideXC.WebUI.Models.Inventory;
 
-namespace SideXC.WebUI.Controllers.HumanResources
+namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class EmployeeTypesController : Controller
+    public class PaymentMethodsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EmployeeTypesController(ApplicationDbContext context)
+        public PaymentMethodsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: EmployeeTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EmployeeTypes.ToListAsync());
+            return View(await _context.PaymentMethods.ToListAsync());
         }
 
-        // GET: EmployeeTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EmployeeTypes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Create([Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod)
         {
             if (ModelState.IsValid)
             {
-                employeeType.Active = true;
-                employeeType.Created = DateTime.Now;
-                employeeType.CreatedBy = null;//Comms:Modificar a que sea variable
-                employeeType.Modified = DateTime.Now;
-                employeeType.ModifiedBy = null;//Comms:Modificar a que sea variable
-                _context.Add(employeeType);
+                paymentMethod.Active = true;
+                paymentMethod.Created = DateTime.Now;
+                paymentMethod.CreatedBy = null;//Comms:Modificar a que sea variable
+                paymentMethod.Modified = DateTime.Now;
+                paymentMethod.ModifiedBy = null;//Comms:Modificar a que sea variable
+                _context.Add(paymentMethod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(paymentMethod);
         }
 
-        // GET: EmployeeTypes/Edit/5
+        // GET: PaymentMethods/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -60,22 +55,22 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 return NotFound();
             }
 
-            var employeeType = await _context.EmployeeTypes.FindAsync(id);
-            if (employeeType == null)
+            var paymentMethod = await _context.PaymentMethods.FindAsync(id);
+            if (paymentMethod == null)
             {
                 return NotFound();
             }
-            return View(employeeType);
+            return View(paymentMethod);
         }
 
-        // POST: EmployeeTypes/Edit/5
+        // POST: PaymentMethods/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod)
         {
-            if (id != employeeType.Id)
+            if (id != paymentMethod.Id)
             {
                 return NotFound();
             }
@@ -84,13 +79,14 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 try
                 {
-                    employeeType.Modified = DateTime.Now;
-                    _context.Update(employeeType);
+                    paymentMethod.Modified = DateTime.Now;
+                    paymentMethod.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    _context.Update(paymentMethod);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeTypeExists(employeeType.Id))
+                    if (!PaymentMethodExists(paymentMethod.Id))
                     {
                         return NotFound();
                     }
@@ -101,12 +97,12 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(paymentMethod);
         }
 
-        private bool EmployeeTypeExists(int id)
+        private bool PaymentMethodExists(int id)
         {
-            return _context.EmployeeTypes.Any(e => e.Id == id);
+            return _context.PaymentMethods.Any(e => e.Id == id);
         }
     }
 }

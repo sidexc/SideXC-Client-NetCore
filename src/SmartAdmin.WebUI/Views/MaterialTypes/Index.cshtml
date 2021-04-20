@@ -1,14 +1,15 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Human_Resources.EmployeeType>
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.MaterialType>
 
 @{
-    ViewData["Title"] = "Employee Types";
+    ViewData["Title"] = "Inventory Catalog - Material Types";
 }
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active">Employee Type</li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active">Material Type</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -33,9 +34,10 @@
                                     <th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Description)
-                                    </th>
+                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Code)</th>
+                                    <th>@Html.DisplayNameFor(model => model.MinimunRange)</th>
+                                    <th>@Html.DisplayNameFor(model => model.MaximunRange)</th>
                                     <th class="text-center">
                                         @Html.DisplayNameFor(model => model.Active)
                                     </th>
@@ -54,9 +56,10 @@
                                     <td id="tdBtn" class="text-center">
                                         <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Description" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Code)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MinimunRange)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MaximunRange)</td>
                                     <td class="text-center">
                                         @Html.DisplayFor(modelItem => item.Active)
                                     </td>
@@ -86,7 +89,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 4);
+            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 7);
         });
     </script>
 }

@@ -1,4 +1,17 @@
-﻿var _CallMethod = function (_Controller, _Method, _Parameters, _fnSucces) {
+﻿var _Path = location.host;
+var urlEnviroment;
+
+if (_Path.indexOf('localhost') >= 0 && _Path.indexOf(':') >= 0) {
+    urlEnviroment = '';
+}
+else {
+    var pathName = window.location.pathname;
+    var virtualDir = pathName.split('/');
+    urlEnviroment = virtualDir[1];
+    urlEnviroment = '/' + urlEnviroment;
+}
+
+var _CallMethod = function (_Controller, _Method, _Parameters, _fnSucces) {
     var url = urlEnviroment + '/' + _Controller + '/' + _Method;
     url = url.replace('/undefined', '');
     $.ajax({
@@ -10,10 +23,20 @@
         error: function (xhr, ajaxOptions, thrownError) {
             alert('Method: ' + _Method + '; Status: ' + xhr.status + '; ThrowError: ' + thrownError);
         },
-        beforeSend: function () { addLoader(); },
-        complete: function () { removeLoader(); }
+        //    beforeSend: function () { addLoader(); },
+        //    complete: function () { removeLoader(); }
     });
 };
+
+var addLoader = function () {
+    var circle1 = $('<div />').addClass('circle loader');
+    var circle2 = $('<div />').addClass('circle r-loader');
+    var imgDuti = $('<img />').prop('src', srcImage).prop('alt', '');
+    var divLoader = $('<div />').attr('id', 'divLoader101880').addClass('backdrop').append(circle1).append(circle2);
+    $($(document).find('body')).append(divLoader);
+}
+
+var removeLoader = function () { $('#divLoader101880').remove(); }
 
 var _ConvertToDatatable = function (tableName, fileName, indexColumnSort) {
     var table = $('#' + tableName).addClass('table table-bordered table-hover table-striped w-100');
@@ -123,4 +146,16 @@ var _ConvertToDatatableWithButtons = function (tableName, fileName, indexColumnS
         fixedHeader: true,
         orderCellsTop: true
     });
+}
+
+var _AlertSideXC = function (message, color) {
+    var icon = color == "success" ? "fa fa-check-circle" : "fa fa-exclamation-circle";
+    bootbox.alert({
+        title: "<span class='" + icon + " text-" + color + " mr-2'></span> <span class='text-" + color + " fw-500'>SideXC Alerts</span>",
+        message: "<span>" + message + "</span>",
+        centerVertical: true,
+        className: "modal-alert",
+        closeButton: false
+    });
+
 }

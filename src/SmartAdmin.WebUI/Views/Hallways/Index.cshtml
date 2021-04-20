@@ -1,14 +1,14 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Human_Resources.EmployeeType>
-
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.Hallway>
 @{
-    ViewData["Title"] = "Employee Types";
+    ViewData["Title"] = "Inventory Catalogs - Hallway";
 }
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active">Employee Type</li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active">Hallway</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -36,6 +36,7 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Description)
                                     </th>
+                                    <th>@Html.DisplayNameFor(model => model.Warehouse)</th>
                                     <th class="text-center">
                                         @Html.DisplayNameFor(model => model.Active)
                                     </th>
@@ -56,6 +57,9 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Warehouse.Description)
                                     </td>
                                     <td class="text-center">
                                         @Html.DisplayFor(modelItem => item.Active)
@@ -86,7 +90,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 4);
+            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 5);
         });
     </script>
 }

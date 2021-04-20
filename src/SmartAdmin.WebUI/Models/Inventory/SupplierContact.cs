@@ -12,7 +12,10 @@ namespace SideXC.WebUI.Models.Inventory
     {
         [Key]
         public int Id { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        [StringLength(500, ErrorMessage = "Please type a valid Contact Name.")]
+        [MaxLength(500, ErrorMessage = "Maximum lenth is 500 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
+        public string ContactName { get; set; }
         public virtual ContactType ContactType { get; set; }
         [StringLength(100, ErrorMessage = "Please type a valid description.")]
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]

@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SideXC.WebUI.Data;
-using SideXC.WebUI.Models.Human_Resources;
+using SideXC.WebUI.Models.Inventory;
 
-namespace SideXC.WebUI.Controllers.HumanResources
+namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class EmployeeTypesController : Controller
+    public class WarehousesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EmployeeTypesController(ApplicationDbContext context)
+        public WarehousesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: EmployeeTypes
+        // GET: Warehouses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EmployeeTypes.ToListAsync());
+            return View(await _context.Warehouses.ToListAsync());
         }
 
-        // GET: EmployeeTypes/Create
+        // GET: Warehouses/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EmployeeTypes/Create
+        // POST: Warehouses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] Warehouse warehouse)
         {
             if (ModelState.IsValid)
             {
-                employeeType.Active = true;
-                employeeType.Created = DateTime.Now;
-                employeeType.CreatedBy = null;//Comms:Modificar a que sea variable
-                employeeType.Modified = DateTime.Now;
-                employeeType.ModifiedBy = null;//Comms:Modificar a que sea variable
-                _context.Add(employeeType);
+                warehouse.Active = true;
+                warehouse.Created = DateTime.Now;
+                warehouse.CreatedBy = null;//Comms:Modificar a que sea variable
+                warehouse.Modified = DateTime.Now;
+                warehouse.ModifiedBy = null;//Comms:Modificar a que sea variable
+                _context.Add(warehouse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(warehouse);
         }
 
-        // GET: EmployeeTypes/Edit/5
+        // GET: Warehouses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -60,22 +60,22 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 return NotFound();
             }
 
-            var employeeType = await _context.EmployeeTypes.FindAsync(id);
-            if (employeeType == null)
+            var warehouse = await _context.Warehouses.FindAsync(id);
+            if (warehouse == null)
             {
                 return NotFound();
             }
-            return View(employeeType);
+            return View(warehouse);
         }
 
-        // POST: EmployeeTypes/Edit/5
+        // POST: Warehouses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] Warehouse warehouse)
         {
-            if (id != employeeType.Id)
+            if (id != warehouse.Id)
             {
                 return NotFound();
             }
@@ -84,13 +84,14 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 try
                 {
-                    employeeType.Modified = DateTime.Now;
-                    _context.Update(employeeType);
+                    warehouse.Modified = DateTime.Now;
+                    warehouse.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    _context.Update(warehouse);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeTypeExists(employeeType.Id))
+                    if (!WarehouseExists(warehouse.Id))
                     {
                         return NotFound();
                     }
@@ -101,12 +102,12 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employeeType);
+            return View(warehouse);
         }
 
-        private bool EmployeeTypeExists(int id)
+        private bool WarehouseExists(int id)
         {
-            return _context.EmployeeTypes.Any(e => e.Id == id);
+            return _context.Warehouses.Any(e => e.Id == id);
         }
     }
 }

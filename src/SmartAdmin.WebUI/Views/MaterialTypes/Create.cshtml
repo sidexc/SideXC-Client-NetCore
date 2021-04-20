@@ -1,15 +1,17 @@
-﻿@model SideXC.WebUI.Models.Human_Resources.EmployeeType
+﻿@model SideXC.WebUI.Models.Inventory.MaterialType
 
 @{
-    ViewData["Title"] = "Employee Type - New Item";
+    ViewData["Title"] = "Material Types - New Item";
 }
 
+@Html.AntiForgeryToken()
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "EmployeeTypes")">Employee Types</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "MaterialTypes")">Material Types</a></li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -29,12 +31,26 @@
                         <form asp-action="Create">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
-                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off"/>
+                                    <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
-
+                                <div class="col-md-2 mb-3">
+                                    <label asp-for="Code" class="control-label"></label>
+                                    <input asp-for="Code" class="form-control" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="MinimunRange" class="control-label">Minimum Range</label>
+                                    <input asp-for="MinimunRange" class="form-control" />
+                                    <span asp-validation-for="MinimunRange" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="MaximunRange" class="control-label">Maximum Range</label>
+                                    <input asp-for="MaximunRange" class="form-control" />
+                                    <span asp-validation-for="MaximunRange" class="text-danger"></span>
+                                </div>
                             </div>
 
                             <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
@@ -50,4 +66,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

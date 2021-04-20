@@ -1,15 +1,17 @@
-﻿@model SideXC.WebUI.Models.Human_Resources.EmployeeType
+﻿@model SideXC.WebUI.Models.Inventory.Location
 
 @{
-    ViewData["Title"] = "Employee Type - Edit Item";
+    ViewData["Title"] = "Locations - Edit Item";
 }
 
+@Html.AntiForgeryToken()
 
 <main id="js-page-content" role="main" class="page-content">
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
-        <li class="breadcrumb-item">Human Resources</li>
-        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "EmployeeTypes")">Employee Types</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item">Catalogs</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Locations")">Locations</a></li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -29,11 +31,23 @@
                         <form asp-action="Edit">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <input type="hidden" asp-for="Id" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ddWarehouse" class="control-label">Warehouse </label>
+                                    <select id="ddWarehouse" name="ddWarehouse" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Warehouses,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ddHallways" class="control-label">Hallways </label>
+                                    <select id="ddHallways" name="ddHallways" class="form-control form-control-sm">
+                                        <option value="">-Please select one-</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="custom-control custom-checkbox">
@@ -41,6 +55,7 @@
                                         <label class="custom-control-label" for="Active">Status</label>
                                     </div>
                                 </div>
+
                             </div>
 
                             <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
@@ -55,5 +70,41 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/utilities/common.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#ddWarehouse').val(@Model.Hallway.Warehouse.Id);
+            FillHallways($('#ddWarehouse').val(), true);
+
+            $("#ddWarehouse").change(function () {
+                FillHallways($(this, false).val());
+            });
+
+        });
+
+        var FillHallways = function (id, init) {
+            _CallMethod('Locations', 'GetHallways', { warehouseId: id }, function (_result) {
+                data = JSON.parse(_result);
+
+                var ddHallways = $("#ddHallways");
+                ddHallways.empty();
+                var procemessage = '<option value="">-Please select one-</option>';
+                ddHallways.html(procemessage).show();
+
+                for (var x = 0; x < data.length; x++) {
+                    var option = $("<option />").attr("value", data[x].Id).text(data[x].Description);
+                    ddHallways.append(option);
+                }
+
+                if(init) $('#ddHallways').val(@Model.Hallway.Id);
+
+            });
+
+        }
+
+    </script>
+
 }
 
