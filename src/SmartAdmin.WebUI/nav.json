@@ -49,7 +49,7 @@
       ]
     },
     {
-      "title": "Inventory",
+      "title": "Warehouse",
       "icon": "fal fa-warehouse",
       "roles": [],
       "items": [
@@ -78,6 +78,11 @@
               "roles": []
             },
             {
+              "title": "Material Type Costs",
+              "href": "MaterialTypeCosts_Index.html",
+              "roles": []
+            },
+            {
               "title": "Transaction Types",
               "href": "TransactionTypes_Index.html",
               "roles": []
@@ -97,6 +102,11 @@
         {
           "title": "Materials",
           "href": "Materials_Index.html",
+          "roles": []
+        },
+        {
+          "title": "Inventory",
+          "href": "Inventories_Index.html",
           "roles": []
         }
       ]

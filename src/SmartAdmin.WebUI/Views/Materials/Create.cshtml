@@ -1,10 +1,6 @@
 ﻿@model SideXC.WebUI.Models.Inventory.Material
 
 @{
-    ViewData["Title"] = "Create";
-}
-
-@{
     ViewData["Title"] = "Materials - New Item";
 }
 
@@ -32,36 +28,66 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Create">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-row">
+                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
+                            <div class="form-row mt-1">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Name" class="control-label"></label>
-                                    <input asp-for="Name" class="form-control form-control-sm" />
+                                    <label asp-for="Name" class="control-label">Nombre</label>
+                                    <input asp-for="Name" class="form-control form-control-sm"/>
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Description" class="control-label"></label>
+                                    <label asp-for="Description" class="control-label"> Descripci&oacute;n</label>
                                     <input asp-for="Description" class="form-control form-control-sm" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label asp-for="StandardCost" class="control-label">Standard Cost</label>
-                                    <input asp-for="StandardCost" class="form-control form-control-sm" />
+                                    <label asp-for="StandardCost" class="control-label">Costo de Compra</label>
+                                    <input asp-for="StandardCost" class="decimal form-control form-control-sm" />
                                     <span asp-validation-for="StandardCost" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
+                                    <label asp-for="SalePrice" class="control-label">Precio de Venta</label>
+                                    <input asp-for="SalePrice" class="decimal form-control form-control-sm" />
+                                    <span asp-validation-for="SalePrice" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label asp-for="MOQ" class="control-label"></label>
-                                    <input asp-for="MOQ" class="form-control form-control-sm" />
+                                    <input asp-for="MOQ" class="integer form-control form-control-sm" />
                                     <span asp-validation-for="MOQ" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label asp-for="LeadTime" class="control-label">Lead Time</label>
-                                    <input asp-for="LeadTime" class="form-control form-control-sm" />
+                                    <input asp-for="LeadTime" class="integer form-control form-control-sm" />
                                     <span asp-validation-for="LeadTime" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="ddUnitMeassure" class="control-label">Unidad de Medida</label>
+                                    <select id="ddUnitMeassure" name="ddUnitMeassure" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.UnitMeassures,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="ddMaterialType" class="control-label">Tipo de Material </label>
+                                    <select id="ddMaterialType" name="ddMaterialType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.MaterialTypes,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="ddMaterialTypeCost" class="control-label">Tipo de Costeo</label>
+                                    <select id="ddMaterialTypeCost" name="ddMaterialTypeCost" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.MaterialTypeCosts,"Value", "Text"))" disabled>
+                                        <option value="">--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="ddSupplier" class="control-label">Proveedor </label>
+                                    <select id="ddSupplier" name="ddSupplier" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Suppliers,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button class="btn btn-primary" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
                         </form>
                     </div>
                 </div>
@@ -73,5 +99,48 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/utilities/common.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#StandardCost").change(function () {
+                _CallMethod('Materials', 'GetMaterialTypeCostId', { stdcost: $(this).val() }, function (_result) {
+                    _datos = JSON.parse(_result);
+                    $("#ddMaterialTypeCost").val(_datos.Id);
+                });
+            });
+
+            $('#StandardCost').val("");
+        });
+
+        function Save() {
+            var unitMeassure = $('#ddUnitMeassure').val();
+            var materialType = $('#ddMaterialType').val();
+            var materialTypeCost = $('#ddMaterialTypeCost').val();
+            var supplier = $('#ddSupplier').val();
+
+            if (unitMeassure == "") {
+                _AlertSideXC("Favor de seleccionar una Unidad de Medida.", "danger");
+                return;
+            }
+            if (materialType == "") {
+                _AlertSideXC("Favor de seleccionar un tipo de material.", "danger");
+                return;
+            }
+            if (materialTypeCost == "") {
+                _AlertSideXC("Favor de seleccionar un tipo de costeo.", "danger");
+                return;
+            }
+            if (supplier == "") {
+                _AlertSideXC("Favor de seleccionar un proveedor.", "danger");
+                return;
+            }
+            $('#btnSave').click();
+        }
+
+    </script>
 }
 

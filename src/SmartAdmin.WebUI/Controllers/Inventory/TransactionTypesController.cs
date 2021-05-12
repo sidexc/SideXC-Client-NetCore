@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,6 @@ namespace SideXC.WebUI.Controllers.Inventory
             _context = context;
         }
 
-        // GET: TransactionTypes
         public async Task<IActionResult> Index()
         {
             return View(await _context.TransactionTypes.ToListAsync());
@@ -33,11 +33,20 @@ namespace SideXC.WebUI.Controllers.Inventory
             ViewBag.Signs = new SelectList(listSigns, "Id", "Description");
             return View();
         }
-
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="transactionType"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Code,Sign,Active,Created,Modified")] TransactionType transactionType)
+        public async Task<IActionResult> Create([Bind("Id,Description,Code,Sign,IsAdjustment,Active,Created,Modified")] TransactionType transactionType)
         {
+            if (TransactionTypeExists(transactionType.Description, transactionType.Code))
+            {
+                ModelState.AddModelError("Error", "Ya existe un tipo de transacción con esa descripción y código.");
+            }
+
             if (ModelState.IsValid)
             {
                 transactionType.Active = true;
@@ -49,9 +58,16 @@ namespace SideXC.WebUI.Controllers.Inventory
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            var listSigns = from eSign e in Enum.GetValues(typeof(eSign))
+                            select new { Id = e, Description = e.ToString() };
+            ViewBag.Signs = new SelectList(listSigns, "Id", "Description");
             return View(transactionType);
         }
-
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -68,14 +84,27 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(transactionType);
         }
-
+        /// <summary>
+        /// Edit post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="transactionType"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Code,Sign,Active,Created,Modified")] TransactionType transactionType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Code,Sign,IsAdjustment,Active,Created,Modified")] TransactionType transactionType, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             if (id != transactionType.Id)
             {
                 return NotFound();
+            }
+            if (transactionType.Description != description)
+            {
+                if (TransactionTypeExists(transactionType.Description, transactionType.Code))
+                {
+                    ModelState.AddModelError("Error", "Ya existe un tipo de transacción con esa descripción y código.");
+                }
             }
 
             if (ModelState.IsValid)
@@ -89,7 +118,7 @@ namespace SideXC.WebUI.Controllers.Inventory
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TransactionTypeExists(transactionType.Id))
+                    if (!TransactionTypeExists(transactionType.Description, transactionType.Code))
                     {
                         return NotFound();
                     }
@@ -102,39 +131,14 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(transactionType);
         }
-
-        // GET: TransactionTypes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        /// <summary>
+        /// Validation
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        private bool TransactionTypeExists(string description, string code)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transactionType = await _context.TransactionTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (transactionType == null)
-            {
-                return NotFound();
-            }
-
-            return View(transactionType);
-        }
-
-        // POST: TransactionTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var transactionType = await _context.TransactionTypes.FindAsync(id);
-            _context.TransactionTypes.Remove(transactionType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool TransactionTypeExists(int id)
-        {
-            return _context.TransactionTypes.Any(e => e.Id == id);
+            return _context.TransactionTypes.Any(e => e.Description == description && e.Code == code);
         }
     }
 }

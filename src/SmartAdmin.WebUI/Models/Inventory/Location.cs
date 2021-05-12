@@ -11,6 +11,10 @@ namespace SideXC.WebUI.Models.Inventory
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(5, ErrorMessage = "Please type a valid Short description.")]
+        [MaxLength(5, ErrorMessage = "Maximum lenth is 5 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
+        public string ShortDescription { get; set; }
         [StringLength(100, ErrorMessage = "Please type a valid description.")]
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]
         [Required(ErrorMessage = "Required.")]

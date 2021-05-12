@@ -142,7 +142,8 @@
 
                             </div>
 
-                            <button class="btn btn-info" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button class="btn btn-primary mt-2" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
                         </form>
                     </div>
                 </div>
@@ -267,6 +268,31 @@
             var card = $('<div />').addClass(classCol).addClass('card ml-1 mr-1 mb-2 text-center ' + bg + ' shadow').append(body);
 
             $('#divContacts').append(card.fadeIn(1000));
+        }
+
+        function Save() {
+            //var unitMeassure = $('#ddUnitMeassure').val();
+            //var materialType = $('#ddMaterialType').val();
+            //var materialTypeCost = $('#ddMaterialTypeCost').val();
+            //var supplier = $('#ddSupplier').val();
+
+            //if (unitMeassure == "") {
+            //    _AlertSideXC("Favor de seleccionar una Unidad de Medida.", "danger");
+            //    return;
+            //}
+            //if (materialType == "") {
+            //    _AlertSideXC("Favor de seleccionar un tipo de material.", "danger");
+            //    return;
+            //}
+            //if (materialTypeCost == "") {
+            //    _AlertSideXC("Favor de seleccionar un tipo de costeo.", "danger");
+            //    return;
+            //}
+            //if (supplier == "") {
+            //    _AlertSideXC("Favor de seleccionar un proveedor.", "danger");
+            //    return;
+            //}
+            $('#btnSave').click();
         }
 
     </script>

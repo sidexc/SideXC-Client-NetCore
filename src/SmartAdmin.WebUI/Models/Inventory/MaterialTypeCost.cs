@@ -7,7 +7,7 @@ using SideXC.WebUI.Models.Security;
 
 namespace SideXC.WebUI.Models.Inventory
 {
-    public class MaterialType
+    public class MaterialTypeCost
     {
         [Key]
         public int Id { get; set; }
@@ -15,6 +15,16 @@ namespace SideXC.WebUI.Models.Inventory
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]
         [Required(ErrorMessage = "Required.")]
         public string Description { get; set; }
+        [StringLength(3, ErrorMessage = "Please type a valid Code.")]
+        [MaxLength(3, ErrorMessage = "Maximum lenth is 3 characters for this field.")]
+        [Required(ErrorMessage = "Required.")]
+        public string Code { get; set; }
+        [Required(ErrorMessage = "Required.")]
+        [DataType("decimal(18,5)")]
+        public decimal MinimunRange { get; set; }
+        [Required(ErrorMessage = "Required.")]
+        [DataType("decimal(18,5)")]
+        public decimal MaximunRange { get; set; }
         public bool Active { get; set; }
         public DateTime Created { get; set; }
         public virtual ClientUser CreatedBy { get; set; }

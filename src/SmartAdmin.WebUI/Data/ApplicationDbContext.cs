@@ -37,12 +37,14 @@ namespace SideXC.WebUI.Data
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Material> Materials { get; set; }
         public virtual DbSet<MaterialType> MaterialTypes { get; set; }
+        public virtual DbSet<MaterialTypeCost> MaterialTypeCosts { get; set; }
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<SupplierContact> SupplierContacts { get; set; }
         public virtual DbSet<TransactionType> TransactionTypes { get; set; }
         public virtual DbSet<UnitMeassure> UnitMeassures { get; set; }
         public virtual DbSet<Warehouse> Warehouses { get; set; }
+        public virtual DbSet<SerialConsecutive> SerialConsecutives { get; set; }
         //Map
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<City> Cities { get; set; }

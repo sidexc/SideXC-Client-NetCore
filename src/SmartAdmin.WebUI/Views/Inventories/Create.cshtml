@@ -1,0 +1,167 @@
+﻿@model SideXC.WebUI.Models.Inventory.Inventory
+
+@{
+    ViewData["Title"] = "Inventario - Ajustes";
+}
+
+@Html.AntiForgeryToken()
+
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Materials")">Materials</a></li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        New Item
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-row">
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="ddWarehouses" class="control-label">Almácen </label>
+                                    <select id="ddWarehouses" name="ddWarehouses" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Warehouses,"Value", "Text"))">
+                                        <option value="">--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ddHallways" class="control-label">Pasillos </label>
+                                    <select id="ddHallways" name="ddHallways" class="form-control form-control-sm">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="ddLocations" class="control-label">Localidad </label>
+                                    <select id="ddLocations" name="ddLocations" class="form-control form-control-sm">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="txtSerial" class="control-label">Material Barcode</label>
+                                    <input type="text" name="txtSerial" id="txtSerial" class="form-control form-control-sm" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <input type="hidden" name="hddMaterialId" id="hddMaterialId" />
+                                    <label for="txtMaterial" class="control-label">Material Name</label>
+                                    <input type="text" name="txtMaterial" id="txtMaterial" class="form-control form-control-sm" readonly />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="txtMaterialDescription" class="control-label">Material Description </label>
+                                    <input type="text" name="txtMaterialDescription" id="txtMaterialDescription" class="form-control form-control-sm" readonly />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="ddTransactionTypes" class="control-label">Transaction Type </label>
+                                    <select id="ddTransactionTypes" name="ddTransactionTypes" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.TransactionTypes,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="QuantityAvailable" class="control-label">Cantidad Disponible</label>
+                                    <input asp-for="QuantityAvailable" class="decimal form-control form-control-sm" />
+                                    <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/utilities/common.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            //Fill hallways
+            $("#ddWarehouses").change(function () {
+                _CallMethod('Inventories', 'GetHallways', { id: $(this).val() }, function (_result) {
+                    data = JSON.parse(_result);
+                    var dd = $("#ddHallways");
+                    dd.empty();
+                    var procemessage = '<option value="">-Please select one- </option>';
+                    dd.html(procemessage).show();
+                    for (var x = 0; x < data.length; x++) {
+                        var option = $("<option />").attr("value", data[x].Id).text(data[x].Description);
+                        dd.append(option);
+                    }
+                });
+            });
+            //Fill locations
+            $("#ddHallways").change(function () {
+                _CallMethod('Inventories', 'GetLocations', { id: $(this).val() }, function (_result) {
+                    data = JSON.parse(_result);
+                    var dd = $("#ddLocations");
+                    dd.empty();
+                    var procemessage = '<option value="">-Please select one- </option>';
+                    dd.html(procemessage).show();
+                    for (var x = 0; x < data.length; x++) {
+                        var option = $("<option />").attr("value", data[x].Id).text(data[x].Description);
+                        dd.append(option);
+                    }
+                });
+            });
+            //Fill locations
+            $("#txtSerial").change(function () {
+                _CallMethod('Inventories', 'GetMaterialInfo', { serial: $(this).val() }, function (_result) {
+                    _datos = JSON.parse(_result);
+
+                    $('#hddMaterialId').val(_datos.Id);
+                    $('#txtMaterial').val(_datos.Name);
+                    $('#txtMaterialDescription').val(_datos.Description);
+                });
+            });
+
+        });
+
+        function Save() {
+            var localidad = $('#ddLocations').val();
+            var serial = $('#txtSerial').val();
+            var transactionType = $('#ddTransactionTypes').val();
+            var Cantidad = $('#QuantityAvailable').val();
+
+            if (localidad == "") {
+                _AlertSideXC("Favor de seleccionar una localidad.", "danger");
+                return;
+            }
+            if (serial == "") {
+                _AlertSideXC("Favor de escanear un código de producto válido.", "danger");
+                return;
+            }
+            if (transactionType == "") {
+                _AlertSideXC("Favor de seleccionar un tipo de transacción.", "danger");
+                return;
+            }
+            if (Cantidad == "") {
+                _AlertSideXC("Favor de teclear la cantidad a inventariar.", "danger");
+                return;
+            }
+
+            $('#btnSave').click();
+        }
+
+    </script>
+}
+

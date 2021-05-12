@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SideXC.WebUI.Data;
-using SideXC.WebUI.Models.Enumerator;
 using SideXC.WebUI.Models.Inventory;
 
 namespace SideXC.WebUI.Controllers.Inventory
@@ -33,8 +33,12 @@ namespace SideXC.WebUI.Controllers.Inventory
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Code,MinimunRange,MaximunRange,Active,Created,Modified")] MaterialType materialType)
+        public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] MaterialType materialType)
         {
+            if (MaterialTypeExists(materialType.Description))
+            {
+                ModelState.AddModelError("Error", "Ya existe un tipo de material con esa descripción.");
+            }
             if (ModelState.IsValid)
             {
                 materialType.Active = true;
@@ -65,18 +69,22 @@ namespace SideXC.WebUI.Controllers.Inventory
             return View(materialType);
         }
 
-        // POST: MaterialTypes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Code,MinimunRange,MaximunRange,Active,Created,Modified")] MaterialType materialType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] MaterialType materialType, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             if (id != materialType.Id)
             {
                 return NotFound();
             }
-
+            if (materialType.Description != description)
+            {
+                if (MaterialTypeExists(materialType.Description))
+                {
+                    ModelState.AddModelError("Error", "Ya existe un tipo de material con esa descripción.");
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -88,7 +96,7 @@ namespace SideXC.WebUI.Controllers.Inventory
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MaterialTypeExists(materialType.Id))
+                    if (!MaterialTypeExists(materialType.Description))
                     {
                         return NotFound();
                     }
@@ -102,9 +110,14 @@ namespace SideXC.WebUI.Controllers.Inventory
             return View(materialType);
         }
 
-        private bool MaterialTypeExists(int id)
+        /// <summary>
+        /// validation
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        private bool MaterialTypeExists(string description)
         {
-            return _context.MaterialTypes.Any(e => e.Id == id);
+            return _context.MaterialTypes.Any(e => e.Description == description);
         }
     }
 }

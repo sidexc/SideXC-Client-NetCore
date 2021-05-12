@@ -1,7 +1,7 @@
-﻿@model SideXC.WebUI.Models.Inventory.MaterialType
+﻿@model SideXC.WebUI.Models.Inventory.MaterialTypeCost
 
 @{
-    ViewData["Title"] = "Material Types - Edit";
+    ViewData["Title"] = "Material Types - Edit Item";
 }
 
 @Html.AntiForgeryToken()
@@ -29,14 +29,28 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Edit">
-                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
-                            <div class="form-row mt-1">
-                                <div class="col-md-6 mb-3">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
                                     <input type="hidden" asp-for="Id" />
-                                    <input type="hidden" id="hddDescription" name="hddDescription" value="@Model.Description" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label asp-for="Code" class="control-label"></label>
+                                    <input asp-for="Code" class="form-control" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="MinimunRange" class="control-label">Minimum Range</label>
+                                    <input asp-for="MinimunRange" class="form-control" />
+                                    <span asp-validation-for="MinimunRange" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="MaximunRange" class="control-label">Maximum Range</label>
+                                    <input asp-for="MaximunRange" class="form-control" />
+                                    <span asp-validation-for="MaximunRange" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="custom-control custom-checkbox">
@@ -44,6 +58,7 @@
                                         <label class="custom-control-label" for="Active">Status</label>
                                     </div>
                                 </div>
+
                             </div>
 
                             <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>

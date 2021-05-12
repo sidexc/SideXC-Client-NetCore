@@ -1,69 +1,162 @@
 ﻿@model SideXC.WebUI.Models.Inventory.Material
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Materials - Edit Item";
 }
 
-<h1>Edit</h1>
+@Html.AntiForgeryToken()
 
-<h4>Material</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Materials")">Materials</a></li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Edit Item
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="hidden" asp-for="Id" />
+                                    <label asp-for="Name" class="control-label">Nombre</label>
+                                    <input asp-for="Name" class="form-control form-control-sm" readonly/>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Description" class="control-label"> Descripci&oacute;n</label>
+                                    <input asp-for="Description" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="StandardCost" class="control-label">Costo de Compra</label>
+                                    <input asp-for="StandardCost" class="decimal form-control form-control-sm" />
+                                    <span asp-validation-for="StandardCost" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="SalePrice" class="control-label">Precio de Venta</label>
+                                    <input asp-for="SalePrice" class="decimal form-control form-control-sm" />
+                                    <span asp-validation-for="SalePrice" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="MOQ" class="control-label"></label>
+                                    <input asp-for="MOQ" class="integer form-control form-control-sm" />
+                                    <span asp-validation-for="MOQ" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="LeadTime" class="control-label">Lead Time</label>
+                                    <input asp-for="LeadTime" class="integer form-control form-control-sm" />
+                                    <span asp-validation-for="LeadTime" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Serial" class="control-label">C&oacute;digo de Barras</label>
+                                    <input asp-for="Serial" class="form-control form-control-sm" readonly />
+                                    <span asp-validation-for="MOQ" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="UnitMeassure" class="control-label">Unidad de Medida </label>
+                                    <select asp-for="UnitMeassure" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.UnitMeassures,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="MaterialType" class="control-label">Tipo de Material </label>
+                                    <select asp-for="MaterialType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.MaterialTypes,"Value", "Text"))">
+                                        <option value="">--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="MaterialTypeCost" class="control-label">Tipo de Costeo</label>
+                                    <select asp-for="MaterialTypeCost" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.MaterialTypeCosts,"Value", "Text"))" disabled>
+                                        <option value="">--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="Supplier" class="control-label">Proveedor </label>
+                                    <select asp-for="Supplier" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Suppliers,"Value", "Text"))">
+                                        <option value="">-Please select one-</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" asp-for="Active">
+                                        <label class="custom-control-label" for="Active">Status</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StandardCost" class="control-label"></label>
-                <input asp-for="StandardCost" class="form-control" />
-                <span asp-validation-for="StandardCost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MOQ" class="control-label"></label>
-                <input asp-for="MOQ" class="form-control" />
-                <span asp-validation-for="MOQ" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LeadTime" class="control-label"></label>
-                <input asp-for="LeadTime" class="form-control" />
-                <span asp-validation-for="LeadTime" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Modified" class="control-label"></label>
-                <input asp-for="Modified" class="form-control" />
-                <span asp-validation-for="Modified" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</main>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/utilities/common.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#UnitMeassure').val(@Model.UnitMeassure.Id);
+            $('#MaterialType').val(@Model.MaterialType.Id);
+            $('#MaterialTypeCost').val(@Model.MaterialTypeCost.Id);
+            $('#Supplier').val(@Model.Supplier.Id);
+
+            $("#StandardCost").change(function () {
+                _CallMethod('Materials', 'GetMaterialTypeCostId', { stdcost: $(this).val() }, function (_result) {
+                    _datos = JSON.parse(_result);
+                    $("#MaterialTypeCost").val(_datos.Id);
+                });
+            });
+
+        });
+
+        function Save() {
+            var unitMeassure = $('#ddUnitMeassure').val();
+            var materialType = $('#ddMaterialType').val();
+            var materialTypeCost = $('#ddMaterialTypeCost').val();
+            var supplier = $('#ddSupplier').val();
+
+            if (unitMeassure == "") {
+                _AlertSideXC("Favor de seleccionar una Unidad de Medida.", "danger");
+                return;
+            }
+            if (materialType == "") {
+                _AlertSideXC("Favor de seleccionar un tipo de material.", "danger");
+                return;
+            }
+            if (materialTypeCost == "") {
+                _AlertSideXC("Favor de seleccionar un tipo de costeo.", "danger");
+                return;
+            }
+            if (supplier == "") {
+                _AlertSideXC("Favor de seleccionar un proveedor.", "danger");
+                return;
+            }
+            $('#btnSave').click();
+        }
+
+    </script>
 }
+

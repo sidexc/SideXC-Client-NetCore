@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,11 @@ namespace SideXC.WebUI.Controllers.Inventory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod)
         {
+            if (PaymentMethodExists(paymentMethod.Description))
+            {
+                ModelState.AddModelError("Error", "Ya existe un metódo de pago con esa descripción.");
+            }
+
             if (ModelState.IsValid)
             {
                 paymentMethod.Active = true;
@@ -46,15 +53,17 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(paymentMethod);
         }
-
-        // GET: PaymentMethods/Edit/5
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var paymentMethod = await _context.PaymentMethods.FindAsync(id);
             if (paymentMethod == null)
             {
@@ -62,19 +71,28 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(paymentMethod);
         }
-
-        // POST: PaymentMethods/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="paymentMethod"></param>
+        /// <returns></returns>        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             if (id != paymentMethod.Id)
             {
                 return NotFound();
             }
-
+            if(paymentMethod.Description != description)
+            {
+                if (PaymentMethodExists(paymentMethod.Description))
+                {
+                    ModelState.AddModelError("Error", "Ya existe un metódo de pago con esa descripción.");
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -86,7 +104,7 @@ namespace SideXC.WebUI.Controllers.Inventory
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaymentMethodExists(paymentMethod.Id))
+                    if (!PaymentMethodExists(paymentMethod.Description))
                     {
                         return NotFound();
                     }
@@ -99,10 +117,14 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(paymentMethod);
         }
-
-        private bool PaymentMethodExists(int id)
+        /// <summary>
+        /// Validation
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        private bool PaymentMethodExists(string description)
         {
-            return _context.PaymentMethods.Any(e => e.Id == id);
+            return _context.PaymentMethods.Any(e => e.Description == description);
         }
     }
 }

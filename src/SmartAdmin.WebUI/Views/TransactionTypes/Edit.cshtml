@@ -29,10 +29,11 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Edit">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-row">
+                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
+                            <div class="form-row mt-1">
                                 <div class="col-md-4 mb-3">
                                     <input type="hidden" asp-for="Id" />
+                                    <input type="hidden" id="hddDescription" name="hddDescription" value="@Model.Description" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
@@ -48,6 +49,12 @@
                                         <option value="">-Please select one-</option>
                                     </select>
                                     <span asp-validation-for="Sign" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" asp-for="IsAdjustment">
+                                        <label class="custom-control-label" for="IsAdjustment">¿Es Ajuste de Inventario?</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="custom-control custom-checkbox">

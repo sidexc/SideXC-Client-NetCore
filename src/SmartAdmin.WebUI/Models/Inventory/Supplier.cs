@@ -12,22 +12,21 @@ namespace SideXC.WebUI.Models.Inventory
     {
         [Key]
         public int Id { get; set; }
-        [StringLength(500, ErrorMessage = "Please type a valid Contact Name.")]
         [MaxLength(500, ErrorMessage = "Maximum lenth is 500 characters for this field.")]
         [Required(ErrorMessage = "Required.")]
         public string Name { get; set; }
         public virtual Address Address { get; set; }
-        [StringLength(20, ErrorMessage = "Please type a valid RFC.")]
         [MaxLength(20, ErrorMessage = "Maximum lenth is 20 characters for this field.")]
         [Required(ErrorMessage = "Required.")]
         public string RFC { get; set; }
         public int PaymentDay { get; set; }
-        [StringLength(100, ErrorMessage = "Please type a valid Contact Name.")]
         [MaxLength(100, ErrorMessage = "Maximum lenth is 500 characters for this field.")]
         [EmailAddress(ErrorMessage ="Please type a correct email address.")]
         [Required(ErrorMessage = "Required.")]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Required.")]
         public virtual PaymentMethod PaymentMethod { get; set; }
+        [Required(ErrorMessage = "Required.")]
         public virtual Currency Currency { get; set; }
         public bool Active { get; set; }
         public DateTime Created { get; set; }

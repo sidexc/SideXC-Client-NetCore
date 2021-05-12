@@ -21,6 +21,7 @@ namespace SideXC.WebUI.Models.Inventory
         [Required(ErrorMessage = "Required.")]
         public string Code { get; set; }
         public virtual eSign Sign { get; set; }
+        public bool IsAdjustment { get; set; }
         public bool Active { get; set; }
         public DateTime Created { get; set; }
         public virtual ClientUser CreatedBy { get; set; }

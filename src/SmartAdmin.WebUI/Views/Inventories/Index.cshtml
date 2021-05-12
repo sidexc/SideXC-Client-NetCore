@@ -1,0 +1,177 @@
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.Inventory>
+
+@{
+    ViewData["Title"] = "Warehouse - Materials";
+}
+
+<main id="js-page-content" role="main" class="page-content">
+    <ol class="breadcrumb page-breadcrumb">
+        <li class="breadcrumb-item"><a href="/#">Home</a></li>
+        <li class="breadcrumb-item">Inventory</li>
+        <li class="breadcrumb-item active">Inventarios</li>
+        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Information
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+
+                        <!-- datatable start -->
+                        <table id="tableReport">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <a class="btn btn-sm btn-outline-light btn-pills" title="Agregar Inventario" asp-action="Create">Ajustes </a>
+                                    </th>
+                                    <th>Material</th>
+                                    <th>Almácen</th>
+                                    <th>Pasillo</th>
+                                    <th>Localidad</th>
+                                    <th>MOQ</th>
+                                    <th>Cantidad Disponible</th>
+                                    <th>Std Cost</th>
+                                    <th>Total Cost</th>
+                                    @*<th>@Html.DisplayNameFor(model => model.Created)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Modified)</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var totalCost = item.QuantityAvailable * double.Parse(item.Material.StandardCost.ToString());
+                                    var tdQty = "tdQty" + item.Id;
+                                    var txtQty = "txtQty" + item.Id;
+                                    var lblQty = "lblQty" + item.Id;
+                                    var tdBtn = "btn" + item.Id;
+                                    var hddOriginalQty = "hddOriginalQty" + item.Id;
+                                    var btnNewQty = "btnNewQty" + item.Id;
+                                    var btnSaveNewQty = "btnSaveNewQty" + item.Id;
+                                    var btnCancelNewQty = "btnCancelNewQty" + item.Id;
+                                    var color = "";
+                                    var diff = item.Material.MOQ - item.QuantityAvailable;
+
+                                    if (diff <= 10)
+                                    {
+                                        color = "bg-danger";
+                                    }
+                                    else if (diff <= 20)
+                                    {
+                                        color = "bg-warning";
+                                    }
+                                    else if(item.QuantityAvailable == 0)
+                                    {
+                                        color = "bg-danger";
+                                    }
+                                    <tr>
+                                        <td id='@tdBtn' class="text-center">
+                                            <a class="btn btn-sm btn-outline-warning btn-pills" title="Movimiento de Localidad" asp-action="Edit" asp-route-id="@item.Id">
+                                                <span class="fa fa-arrow-right"></span>
+                                            </a>
+                                            <a id='@btnNewQty' class="btn btn-sm btn-outline-primary btn-pills" title="Agregar Inventario" onclick="EnabledNewQty(@item.Id)">
+                                                <span class="fa fa-plus"></span>
+                                            </a>
+
+                                            <a id='@btnSaveNewQty' class="btn btn-sm btn-success btn-pills d-none" title="Guardar nueva cantidad" onclick="SaveNewQty(@item.Id)">
+                                                <span class="fa fa-save"></span>
+                                            </a>
+                                            <a id='@btnCancelNewQty' class="btn btn-sm btn-danger btn-pills d-none" title="Cancelar nueva cantidad" onclick="CancelNewQty(@item.Id)">
+                                                <span class="fa fa-times"></span>
+                                            </a>
+
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.Material.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Location.Hallway.Warehouse.Description)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Location.Hallway.Description)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Location.Description)</td>
+                                        <td class="@color">@Html.DisplayFor(modelItem => item.Material.MOQ)</td>
+                                        <td id='@tdQty'>
+                                            <input type="hidden" id='@hddOriginalQty' name='@hddOriginalQty' value="@item.QuantityAvailable" />
+                                            <span id='@lblQty' name='@lblQty'>@item.QuantityAvailable</span>
+                                            <input type="text" id='@txtQty' name='@txtQty' value="@item.QuantityAvailable" class=" decimal form-control form-control-sm d-none" />
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.Material.StandardCost)</td>
+                                        <td>@totalCost</td>
+                                        @*<td>@Html.DisplayFor(modelItem => item.Created)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Modified)</td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section ScriptsBlock {
+    <script src="~/js/utilities/common.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            _ConvertToDatatableWithButtons("tableReport", "InventaryFile", 1);
+        });
+
+        function EnabledNewQty(id) {
+            $('#lblQty' + id).addClass("d-none");
+            $('#txtQty' + id).removeClass("d-none");
+            $('#txtQty' + id).focus();
+            $('#btnNewQty' + id).addClass("d-none");
+            $('#btnSaveNewQty' + id).removeClass("d-none");
+            $('#btnCancelNewQty' + id).removeClass("d-none");
+        }
+
+        function SaveNewQty(id) {
+            var newQty = $('#txtQty' + id).val();
+            var originalQty = $('#hddOriginalQty' + id).val();
+
+            if (newQty == "") {
+                _AlertSideXC("Favor de capturar una cantidad.", "danger");
+                $('#txtQty' + id).focus();
+                return;
+            }
+
+            _CallMethod('Inventories', 'SaveNewQty', { id: id, actualQty: originalQty, newQty: newQty }, function (_result) {
+                _datos = JSON.parse(_result);
+                if (_datos.AnyError == true) {
+                    _AlertSideXC(_datos.HtmlError, "danger");
+                }
+                else {
+                    _AlertSideXC(_datos.Information, "success");
+                    $('#lblQty' + id).text(newQty);
+                    $('#lblQty' + id).removeClass("d-none");
+                    $('#txtQty' + id).addClass("d-none");
+                    $('#btnNewQty' + id).removeClass("d-none");
+                    $('#btnSaveNewQty' + id).addClass("d-none");
+                    $('#btnCancelNewQty' + id).addClass("d-none");
+                }
+            });
+        }
+
+        function CancelNewQty(id) {
+            $('#lblQty' + id).removeClass("d-none");
+            $('#txtQty' + id).addClass("d-none");
+            $('#btnNewQty' + id).removeClass("d-none");
+            $('#btnSaveNewQty' + id).addClass("d-none");
+            $('#btnCancelNewQty' + id).addClass("d-none");
+        }
+
+
+
+    </script>
+}
+

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.Material>
 
 @{
-    ViewData["Title"] = "Inventory - Materials";
+    ViewData["Title"] = "Warehouse - Materials";
 }
 
 <main id="js-page-content" role="main" class="page-content">
@@ -34,13 +34,16 @@
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
                                     <th>Name</th>
-                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
-                                    <th>Standard Cost</th>
+                                    <th>Descripci&oacute;n</th>
+                                    <th>Costo Estandar</th>
+                                    <th>Precion de Venta</th>
                                     <th>@Html.DisplayNameFor(model => model.MOQ)</th>
-                                    <th>Unit Meassure</th>
-                                    <th>Material Type</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Tipo de Material</th>
+                                    <th>Tipo de Costeo</th>
                                     <th>Lead Time</th>
-                                    <th>Supplier Name @*Add Detail in link*@</th>
+                                    <th>Proveedor @*Add Detail in link*@</th>
+                                    <th>Co&oacute;digo de Barras</th>
                                     <th>@Html.DisplayNameFor(model => model.Active)</th>
                                     <th>@Html.DisplayNameFor(model => model.Created)</th>
                                     <th>@Html.DisplayNameFor(model => model.Modified)</th>
@@ -56,11 +59,14 @@
                                     <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.StandardCost)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SalePrice)</td>
                                     <td>@Html.DisplayFor(modelItem => item.MOQ)</td>
                                     <td>@Html.DisplayFor(modelItem => item.UnitMeassure.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.MaterialType.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MaterialTypeCost.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.LeadTime)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Supplier.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Serial)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Active)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Created)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Modified)</td>
@@ -84,7 +90,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "MaterialsFile", 7);
+            _ConvertToDatatableWithButtons("tableReport", "MaterialsFile", 12);
         });
     </script>
 }

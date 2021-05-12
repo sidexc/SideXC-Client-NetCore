@@ -1,7 +1,7 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.TransactionType>
+﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.MaterialTypeCost>
 
 @{
-    ViewData["Title"] = "Inventory Catalog - Transaction Types";
+    ViewData["Title"] = "Inventory Catalog - Material Types";
 }
 
 <main id="js-page-content" role="main" class="page-content">
@@ -9,7 +9,7 @@
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
         <li class="breadcrumb-item">Inventory</li>
         <li class="breadcrumb-item">Catalogs</li>
-        <li class="breadcrumb-item active">Transaction Types</li>
+        <li class="breadcrumb-item active">Material Type</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -36,8 +36,8 @@
                                     </th>
                                     <th>@Html.DisplayNameFor(model => model.Description)</th>
                                     <th>@Html.DisplayNameFor(model => model.Code)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Sign)</th>
-                                    <th class="text-center">¿Es Ajuste de Inventario?</th>
+                                    <th>@Html.DisplayNameFor(model => model.MinimunRange)</th>
+                                    <th>@Html.DisplayNameFor(model => model.MaximunRange)</th>
                                     <th class="text-center">
                                         @Html.DisplayNameFor(model => model.Active)
                                     </th>
@@ -58,8 +58,8 @@
                                     </td>
                                     <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Code)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Sign)</td>
-                                    <td class="text-center">@Html.DisplayFor(modelItem => item.IsAdjustment)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MinimunRange)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.MaximunRange)</td>
                                     <td class="text-center">
                                         @Html.DisplayFor(modelItem => item.Active)
                                     </td>
@@ -89,8 +89,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 6);
+            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 7);
         });
     </script>
 }
-

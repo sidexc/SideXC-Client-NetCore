@@ -29,17 +29,18 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Edit">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-row">
+                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
+                            <div class="form-row mt-1">
                                 <div class="col-md-6 mb-3">
                                     <input type="hidden" asp-for="Id" />
+                                    <input type="hidden" id="hddDescription" name="hddDescription" value="@Model.Description" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="NumberOfDays" class="control-label">Number of Days</label>
-                                    <input asp-for="NumberOfDays" class="form-control form-control-sm" />
+                                    <input asp-for="NumberOfDays" class="integer form-control form-control-sm" />
                                     <span asp-validation-for="NumberOfDays" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-12 mb-3">
@@ -62,4 +63,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/utilities/common.js"></script>
 }

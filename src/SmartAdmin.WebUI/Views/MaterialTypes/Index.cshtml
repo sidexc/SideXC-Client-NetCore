@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SideXC.WebUI.Models.Inventory.MaterialType>
 
 @{
-    ViewData["Title"] = "Inventory Catalog - Material Types";
+    ViewData["Title"] = "Inventory Catalogs - Material Type";
 }
 
 <main id="js-page-content" role="main" class="page-content">
@@ -34,10 +34,9 @@
                                     <th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
-                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Code)</th>
-                                    <th>@Html.DisplayNameFor(model => model.MinimunRange)</th>
-                                    <th>@Html.DisplayNameFor(model => model.MaximunRange)</th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </th>
                                     <th class="text-center">
                                         @Html.DisplayNameFor(model => model.Active)
                                     </th>
@@ -56,10 +55,9 @@
                                     <td id="tdBtn" class="text-center">
                                         <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Description" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
                                     </td>
-                                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Code)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.MinimunRange)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.MaximunRange)</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
                                     <td class="text-center">
                                         @Html.DisplayFor(modelItem => item.Active)
                                     </td>
@@ -89,7 +87,7 @@
 
     <script>
         $(document).ready(function () {
-            _ConvertToDatatableWithButtons("tableReport", "EmployeeTypeFile", 7);
+            _ConvertToDatatableWithButtons("tableReport", "MaterialTypeFile", 4);
         });
     </script>
 }

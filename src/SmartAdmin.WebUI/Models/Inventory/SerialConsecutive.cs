@@ -7,14 +7,11 @@ using SideXC.WebUI.Models.Security;
 
 namespace SideXC.WebUI.Models.Inventory
 {
-    public class Inventory
+    public class SerialConsecutive
     {
         [Key]
         public int Id { get; set; }
-        public virtual Material Material { get; set; }
-        public virtual Location Location { get; set; }
-        [Required(ErrorMessage = "Required.")]
-        public double QuantityAvailable { get; set; }
+        public int Folio { get; set; }
         public DateTime Created { get; set; }
         public virtual ClientUser CreatedBy { get; set; }
         public DateTime Modified { get; set; }
