@@ -22,13 +22,13 @@ namespace SideXC.WebUI.Models
                 controller.ViewBag.LayoutSettings = Enabled;
 
                 // SmartAdmin Default Settings
-                controller.ViewBag.App = "SmartAdmin";
-                controller.ViewBag.AppName = "SmartAdmin WebApp";
+                controller.ViewBag.App = "SideXC";
+                controller.ViewBag.AppName = "SideXC WebApp";
                 controller.ViewBag.AppFlavor = "ASP.NET Core 3.1";
                 controller.ViewBag.AppFlavorSubscript = ".NET Core 3.1";
                 controller.ViewBag.IconPrefix = "fal";
-                controller.ViewBag.User = "Dr. Codex Lantern";
-                controller.ViewBag.Email = "drlantern@gotbootstrap.com";
+                controller.ViewBag.User = "Jose Luis Lopez";
+                controller.ViewBag.Email = "jllopez@sidexc.com";
                 controller.ViewBag.Twitter = "codexlantern";
                 controller.ViewBag.Avatar = "avatar-admin.png";
                 controller.ViewBag.Version = "4.2.0";

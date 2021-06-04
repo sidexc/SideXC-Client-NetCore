@@ -5,7 +5,7 @@
       "title": "Home",
       "href": "aspnetcore_welcome.html",
       "icon": "fal fa-home",
-      "roles": []
+      "roles": ["Admin,Capturista"]
     },
     {
       "title": "Security",
@@ -106,7 +106,7 @@
         },
         {
           "title": "Inventory",
-          "href": "Inventories_Index.html",
+          "href": "Inventories_Summary.html",
           "roles": []
         }
       ]

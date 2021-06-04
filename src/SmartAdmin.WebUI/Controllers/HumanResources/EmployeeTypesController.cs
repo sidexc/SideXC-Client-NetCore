@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,10 @@ namespace SideXC.WebUI.Controllers.HumanResources
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
         {
+            if (EmployeeTypeExists(employeeType.Description))
+            {
+                ModelState.AddModelError("Error", "Ya existe un tipo de empleado con esa descripción.");
+            }
             if (ModelState.IsValid)
             {
                 employeeType.Active = true;
@@ -73,13 +78,20 @@ namespace SideXC.WebUI.Controllers.HumanResources
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             if (id != employeeType.Id)
             {
                 return NotFound();
             }
-
+            if (employeeType.Description != description)
+            {
+                if (EmployeeTypeExists(employeeType.Description))
+                {
+                    ModelState.AddModelError("Error", "Ya existe un tipo de empleado con esa descripción.");
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -90,7 +102,7 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeTypeExists(employeeType.Id))
+                    if (!EmployeeTypeExists(employeeType.Description))
                     {
                         return NotFound();
                     }
@@ -104,9 +116,9 @@ namespace SideXC.WebUI.Controllers.HumanResources
             return View(employeeType);
         }
 
-        private bool EmployeeTypeExists(int id)
+        private bool EmployeeTypeExists(string description)
         {
-            return _context.EmployeeTypes.Any(e => e.Id == id);
+            return _context.EmployeeTypes.Any(e => e.Description == description);
         }
     }
 }

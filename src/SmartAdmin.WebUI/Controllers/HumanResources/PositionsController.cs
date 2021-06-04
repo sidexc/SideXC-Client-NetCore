@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,43 +20,35 @@ namespace SideXC.WebUI.Controllers.HumanResources
             _context = context;
         }
 
-        // GET: Positions
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Positions.ToListAsync());
         }
-
-        // GET: Positions/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var position = await _context.Positions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (position == null)
-            {
-                return NotFound();
-            }
-
-            return View(position);
-        }
-
-        // GET: Positions/Create
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Positions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Create Post
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] Position position)
         {
+            if (PositionExists(position.Description))
+            {
+                ModelState.AddModelError("Error", "Ya existe una posición con esa descripción.");
+            }
             if (ModelState.IsValid)
             {
                 position.Active = true;
@@ -69,8 +62,11 @@ namespace SideXC.WebUI.Controllers.HumanResources
             }
             return View(position);
         }
-
-        // GET: Positions/Edit/5
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,19 +81,28 @@ namespace SideXC.WebUI.Controllers.HumanResources
             }
             return View(position);
         }
-
-        // POST: Positions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit Post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] Position position)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] Position position, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             if (id != position.Id)
             {
                 return NotFound();
             }
-
+            if (position.Description != description)
+            {
+                if (PositionExists(position.Description))
+                {
+                    ModelState.AddModelError("Error", "Ya existe una posición con esa descripción.");
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -108,7 +113,7 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PositionExists(position.Id))
+                    if (!PositionExists(position.Description))
                     {
                         return NotFound();
                     }
@@ -121,39 +126,14 @@ namespace SideXC.WebUI.Controllers.HumanResources
             }
             return View(position);
         }
-
-        // GET: Positions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private bool PositionExists(string description)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var position = await _context.Positions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (position == null)
-            {
-                return NotFound();
-            }
-
-            return View(position);
-        }
-
-        // POST: Positions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var position = await _context.Positions.FindAsync(id);
-            _context.Positions.Remove(position);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PositionExists(int id)
-        {
-            return _context.Positions.Any(e => e.Id == id);
+            return _context.Positions.Any(e => e.Description == description);
         }
     }
 }

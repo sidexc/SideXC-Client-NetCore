@@ -28,10 +28,11 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Edit">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
                             <div class="form-row">
                                 <div class="col-md-12 mb-3">
                                     <input type="hidden" asp-for="Id" />
+                                    <input type="hidden" id="hddDescription" name="hddDescription" value="@Model.Description" />
                                     <label asp-for="Description" class="control-label font-weight-bold"></label>
                                     <input asp-for="Description" class="form-control form-control-sm" required autocomplete="off" />
                                     <span asp-validation-for="Description" class="text-danger"></span>
@@ -44,7 +45,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <button class="btn btn-primary" type="submit"><span class="fa fa-save"></span>&nbsp; Guardar</button>
                         </form>
                     </div>
                 </div>

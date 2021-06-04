@@ -39,10 +39,14 @@ namespace SideXC.WebUI.Controllers.Inventory
         public async Task<IActionResult> Create(Location location, IFormCollection collection)
         {
             var hallwayId = int.Parse(collection["ddHallways"].ToString());
-            var hallway = _context.Hallways.FirstOrDefault(w => w.Id == hallwayId);
+            var hallway = _context.Hallways.Include(w=> w.Warehouse).FirstOrDefault(w => w.Id == hallwayId);
+            location.Hallway = hallway;
+            if (LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse))
+            {
+                ModelState.AddModelError("Error", "Ya existe una locación con esa descripción.");
+            }
             if (ModelState.IsValid)
             {
-                location.Hallway = hallway;
                 location.Active = true;
                 location.Created = DateTime.Now;
                 location.CreatedBy = null;//Comms:Modificar a que sea variable
@@ -52,6 +56,8 @@ namespace SideXC.WebUI.Controllers.Inventory
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
+            ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View(location);
         }
 
@@ -76,18 +82,25 @@ namespace SideXC.WebUI.Controllers.Inventory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Location location, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             var hallwayId = int.Parse(collection["ddHallways"].ToString());
-            var hallway = _context.Hallways.FirstOrDefault(w => w.Id == hallwayId);
+            var hallway = _context.Hallways.Include(w => w.Warehouse).FirstOrDefault(w => w.Id == hallwayId);
+            location.Hallway = hallway;
             if (id != location.Id)
             {
                 return NotFound();
             }
-
+            if (location.Description != description)
+            {
+                if (LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse))
+                {
+                    ModelState.AddModelError("Error", "Ya existe una locación con esa descripción.");
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
-                    location.Hallway = hallway;
                     location.Created = DateTime.Now;
                     location.CreatedBy = null;//Comms:Modificar a que sea variable
                     location.Modified = DateTime.Now;
@@ -97,7 +110,7 @@ namespace SideXC.WebUI.Controllers.Inventory
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LocationExists(location.Id))
+                    if (!LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse))
                     {
                         return NotFound();
                     }
@@ -108,12 +121,14 @@ namespace SideXC.WebUI.Controllers.Inventory
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
+            ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View(location);
         }
 
-        private bool LocationExists(int id)
+        private bool LocationExists(string description, Hallway hallway, Warehouse warehouse)
         {
-            return _context.Locations.Any(e => e.Id == id);
+            return _context.Locations.Any(e => e.Description == description && e.Hallway.Id == hallway.Id && e.Hallway.Warehouse.Id == warehouse.Id );
         }
 
         public string GetHallways(int warehouseId)

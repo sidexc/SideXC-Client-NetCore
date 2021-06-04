@@ -8,5 +8,6 @@ namespace SideXC.WebUI.Data
 {
     public class ApplicationUser : IdentityUser<int>
     {
+        public Guid UID { get; set; }
     }
 }

@@ -40,9 +40,14 @@ namespace SideXC.WebUI.Controllers.Inventory
         {
             var warehouseId = int.Parse(collection["Warehouse"].ToString());
             var warehouse = _context.Warehouses.FirstOrDefault(w => w.Id == warehouseId);
+            hallway.Warehouse = warehouse;
+
+            if (HallwayExists(hallway.Description, hallway.Warehouse))
+            {
+                ModelState.AddModelError("Error", "Ya existe un pasillo con esa descripción.");
+            }
             if (ModelState.IsValid)
             {
-                hallway.Warehouse = warehouse;
                 hallway.Active = true;
                 hallway.Created = DateTime.Now;
                 hallway.CreatedBy = null;//Comms:Modificar a que sea variable
@@ -52,6 +57,8 @@ namespace SideXC.WebUI.Controllers.Inventory
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
+            ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View(hallway);
         }
 
@@ -79,43 +86,52 @@ namespace SideXC.WebUI.Controllers.Inventory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Hallway hallway, IFormCollection collection)
         {
+            var description = collection["hddDescription"].ToString();
             var warehouseId = int.Parse(collection["Warehouse"].ToString());
             var warehouse = _context.Warehouses.FirstOrDefault(w => w.Id == warehouseId);
-        
-                if (id != hallway.Id)
-                {
-                    return NotFound();
-                }
+            hallway.Warehouse = warehouse;
 
-                if (ModelState.IsValid)
-                {
-                    try
-                    {
-                        hallway.Warehouse = warehouse;
-                        hallway.Modified = DateTime.Now;
-                        hallway.ModifiedBy = null;//Comms:Modificar a que sea variable
-                        _context.Update(hallway);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!HallwayExists(hallway.Id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(hallway);
-            }
-
-            private bool HallwayExists(int id)
+            if (id != hallway.Id)
             {
-                return _context.Hallways.Any(e => e.Id == id);
+                return NotFound();
             }
+            if (hallway.Description != description)
+            {
+                if (HallwayExists(hallway.Description, hallway.Warehouse))
+                {
+                    ModelState.AddModelError("Error", "Ya existe un pasillo con esa descripción.");
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    hallway.Modified = DateTime.Now;
+                    hallway.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    _context.Update(hallway);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!HallwayExists(hallway.Description, hallway.Warehouse))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
+            ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
+            return View(hallway);
+        }
+
+        private bool HallwayExists(string description, Warehouse warehouse)
+        {
+            return _context.Hallways.Any(e => e.Description == description && e.Warehouse.Id == warehouse.Id);
         }
     }
+}

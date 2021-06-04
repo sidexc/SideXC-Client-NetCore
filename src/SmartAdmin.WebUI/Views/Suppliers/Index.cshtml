@@ -39,22 +39,26 @@
                                     <th>Payment Day</th>
                                     <th>Paymeny Method</th>
                                     <th>Currency</th>
+                                    <th>Medios de Contacto</th>
+                                    <th>Calle</th>
+                                    <th>N&uacute;mero Exterior</th>
+                                    <th>N&uacute;mero Interior</th>
+                                    <th>C&oacute;digo Postal</th>
+                                    <th>Colonia</th>
+                                    <th>Ciudad</th>
+                                    <th>Estado</th>
+                                    <th>Pa&iacute;s</th>
                                     <th>@Html.DisplayNameFor(model => model.Active)</th>
                                     <th>@Html.DisplayNameFor(model => model.Created)</th>
                                     <th>@Html.DisplayNameFor(model => model.Modified)</th>
-                                    <th>Street</th>
-                                    <th>Internal Number</th>
-                                    <th>External Number</th>
-                                    <th>Zip Code</th>
-                                    <th>Neighborhood</th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th>Country</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+                                    var contacts = item.Contacts.Select(s => new { item = s?.ContactName + " - " + s?.ContactType?.Description + " - " + s?.Description });
+                                    var stringContacts = string.Join("<br>", contacts.Select(s => s.item));
+
                                 <tr>
                                     <td id="tdBtn" class="text-center">
                                         <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Name" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
@@ -65,9 +69,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.PaymentDay)</td>
                                     <td>@Html.DisplayFor(modelItem => item.PaymentMethod.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Currency.Description)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Modified)</td>
+                                    <td><br />@Html.Raw(stringContacts)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Address.Street)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Address.InternalNumber)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Address.ExternalNumber)</td>
@@ -76,6 +78,9 @@
                                     <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.State.Description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Address.Neighborhood.City.State.Country.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modified)</td>
                                 </tr>
                                 }
                             </tbody>

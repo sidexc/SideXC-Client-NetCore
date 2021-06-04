@@ -34,87 +34,60 @@
                                     <th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
                                     </th>
-                                    <th>
-                                        Employee Number
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Name)
-                                    </th>
-                                    <th>
-                                        Last Name 1
-                                    </th>
-                                    <th>
-                                        Last Name 2
-                                    </th>
-                                    <th>
-                                        Picture
-                                    </th>
-                                    <th>
-                                        Gross Salary
-                                    </th>
-                                    <th>
-                                        Net Salary
-                                    </th>
-                                    <th>
-                                        Daily Salary
-                                    </th>
-                                    <th>
-                                        Integrated Daily Salary
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Active)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Created)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Modified)
-                                    </th>
+                                    <th>N&uacute;mero empleado</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Fotograf&iacute;</th>
+                                    <th>Salario Bruto</th>
+                                    <th>Salario Neto</th>
+                                    <th>Salario Diario</th>
+                                    <th>Salario Diario Integrado</th>
+                                    <th>Calle</th>
+                                    <th>N&uacute;mero Exterior</th>
+                                    <th>N&uacute;mero Interior</th>
+                                    <th>C&oacute;digo Postal</th>
+                                    <th>Colonia</th>
+                                    <th>Ciudad</th>
+                                    <th>Estado</th>
+                                    <th>Pa&iacute;s</th>
+                                    <th>Medios de Contacto</th>
+                                    <th>@Html.DisplayNameFor(model => model.Active)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Created)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Modified)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+                                    var contacts = item.Contacts.Select(s => new { item= s.ContactType.Description + " - " + s.Description });
+                                    var stringContacts = string.Join("<br>", contacts.Select(s=> s.item));
+
                                 <tr>
                                     <td id="tdBtn" class="text-center">
                                         <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Name" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EmployeeNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastName1)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastName2)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PhotUrl)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.GrossSalary)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.NetSalary)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DailySalary)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IntegratedDailySalary)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Active)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Created)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Modified)
-                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.EmployeeNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.LastName1)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.LastName2)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PhotUrl)</td>
+                                    <td>@string.Format("{0:C}", item.GrossSalary)</td>
+                                    <td>@string.Format("{0:C}", item.NetSalary)</td>
+                                    <td>@string.Format("{0:C}", item.DailySalary)</td>
+                                    <td>@string.Format("{0:C}", item.IntegratedDailySalary)</td>
+                                    <td>@item.Address.Street</td>
+                                    <td>@item.Address.ExternalNumber</td>
+                                    <td>@item.Address.InternalNumber</td>
+                                    <td>@item.Address.Neighborhood.ZipCode</td>
+                                    <td>@item.Address.Neighborhood.Description</td>
+                                    <td>@item.Address.Neighborhood.City.Description</td>
+                                    <td>@item.Address.Neighborhood.City.State.Description</td>
+                                    <td>@item.Address.Neighborhood.City.State.Country.Description</td>
+                                    <td><br />@Html.Raw(stringContacts)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modified)</td>
                                 </tr>
                                 }
                             </tbody>

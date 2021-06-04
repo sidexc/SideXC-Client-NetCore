@@ -22,13 +22,37 @@ namespace SideXC.WebUI.Controllers.Inventory
         {
             _context = context;
         }
+
+        public async Task<IActionResult> Summary()
+        {
+            var model = (
+                           from i in _context.Inventories
+                           group i by new {i.Material.Id, i.Material.Name, i.Material.Description, i.Material.MOQ, i.Material.StandardCost, i.Material.SalePrice } into s
+                           select new InventorySummary {
+                               Id = s.Key.Id,
+                               Material = s.Key.Name,
+                               Description = s.Key.Description,
+                               MOQ = s.Key.MOQ,
+                               StandarCost = s.Key.StandardCost,
+                               SalePrice = s.Key.SalePrice,
+                               QuantityAvailable = s.Sum(i=> i.QuantityAvailable)
+                           }
+                ).ToListAsync();
+
+            return View(await model);
+        }
+
         /// <summary>
         /// Index
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            return View(await _context.Inventories.Include(i => i.Material).Include(i => i.Location).ThenInclude(h => h.Hallway).ThenInclude(w => w.Warehouse).ToListAsync());
+            var item = _context.Materials.FirstOrDefault(m => m.Id == id);
+            var models = _context.Inventories.Include(i => i.Material).Include(i => i.Location).ThenInclude(h => h.Hallway).ThenInclude(w => w.Warehouse).Where(i => i.Material.Id == id).ToListAsync();
+            ViewBag.Material = item.Name;
+            ViewBag.MaterialDescription = item.Description;
+            return View(await models);
         }
         /// <summary>
         /// View create

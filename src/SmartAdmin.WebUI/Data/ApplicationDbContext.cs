@@ -7,6 +7,7 @@ using SideXC.WebUI.Models.Human_Resources;
 using SideXC.WebUI.Models.Inventory;
 using SideXC.WebUI.Models.Map;
 using SideXC.WebUI.Models.Security;
+using SideXC.WebUI.Controllers.Inventory;
 
 namespace SideXC.WebUI.Data
 {
@@ -21,12 +22,16 @@ namespace SideXC.WebUI.Data
         //{
         //}
 
+        //Identity Security
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public virtual DbSet<ApplicationRole> ApplicationRoles { get; set; }
 
         //Human Resource
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeContact> EmployeeContacts { get; set; }
         public virtual DbSet<EmployeePositionHistory> EmployeePositionsHistory { get; set; }
         public virtual DbSet<EmployeeSalaryHistory> EmployeeSalarysHistory { get; set; }
+        public virtual DbSet<EmployeeConsecutive> EmployeeConsecutives { get; set; }
         public virtual DbSet<EmployeeType> EmployeeTypes { get; set; }
         public virtual DbSet<Position> Positions { get; set; }        
         //Inventory
@@ -59,5 +64,6 @@ namespace SideXC.WebUI.Data
         public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
         public virtual DbSet<StatusClientUser> StatusClientUsers { get; set; }
+        public DbSet<SideXC.WebUI.Controllers.Inventory.InventorySummary> InventorySummary { get; set; }
     }
 }

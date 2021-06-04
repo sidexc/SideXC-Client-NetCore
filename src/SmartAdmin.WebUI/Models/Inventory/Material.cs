@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using SideXC.WebUI.Models.Security;
+using SideXC.WebUI.Data;
 
 namespace SideXC.WebUI.Models.Inventory
 {
@@ -38,8 +39,8 @@ namespace SideXC.WebUI.Models.Inventory
         public virtual Supplier Supplier { get; set; }
         public bool Active { get; set; }
         public DateTime Created { get; set; }
-        public virtual ClientUser CreatedBy { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
         public DateTime Modified { get; set; }
-        public virtual ClientUser ModifiedBy { get; set; }
+        public virtual ApplicationUser ModifiedBy { get; set; }
     }
 }

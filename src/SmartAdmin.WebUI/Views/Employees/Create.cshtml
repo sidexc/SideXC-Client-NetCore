@@ -25,41 +25,72 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <form asp-action="Create">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div asp-validation-summary="All" class="bg-danger pt-2 pb-2 text-white mb-4"></div>
 
                             <div class="row">
                                 <div class="col-md-12">
 
                                     <div id="smartwizard">
                                         <ul>
-                                            <li><a href="#step-1">General Data</a></li>
-                                            <li><a href="#step-2">Salary</a></li>
-                                            <li><a href="#step-3">Address</a></li>
-                                            <li><a href="#step-4">User Account</a></li>
-                                            <li><a href="#step-5">Contacts</a></li>
+                                            <li><a href="#step-1">Datos Generales</a></li>
+                                            <li><a href="#step-2">Direcci&oacute;n</a></li>
+                                            <li><a href="#step-3">Cuenta de acceso</a></li>
+                                            <li><a href="#step-4">Contactos</a></li>
                                         </ul>
                                         <div class="p-3">
                                             <div id="step-1" class="">
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Please type the correct data for the new employee.
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Capturar los datos correctos del empleado.
                                                         </label>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
-                                                        <label asp-for="Name" class="control-label"></label>
+                                                        <label asp-for="Name" class="control-label">Nombre</label>
                                                         <input asp-for="Name" class="form-control form-control-sm" />
                                                         <span asp-validation-for="Name" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label asp-for="LastName1" class="control-label">Last Name 1</label>
+                                                        <label asp-for="LastName1" class="control-label">Apellido Paterno</label>
                                                         <input asp-for="LastName1" class="form-control form-control-sm" />
                                                         <span asp-validation-for="LastName1" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label asp-for="LastName2" class="control-label">Last Name 2</label>
+                                                        <label asp-for="LastName2" class="control-label">Apellido Materno</label>
                                                         <input asp-for="LastName2" class="form-control form-control-sm" />
                                                         <span asp-validation-for="LastName2" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="ddPositions" class="control-label">Tipo de Contacto </label>
+                                                        <select id="ddPositions" name="ddPositions" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Positions,"Value", "Text"))">
+                                                            <option value="">-Please select one-</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-12 mb-3">
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Incluir el detalle de la informaci&oacute;n salarial
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label asp-for="GrossSalary" class="control-label">Sueldo Bruto Mensual</label>
+                                                        <input asp-for="GrossSalary" class="form-control form-control-sm decimal" placeholder="$0.00" />
+                                                        <span asp-validation-for="GrossSalary" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label asp-for="NetSalary" class="control-label">Salario Neto Mensual</label>
+                                                        <input asp-for="NetSalary" class="form-control form-control-sm decimal" placeholder="$0.00" />
+                                                        <span asp-validation-for="NetSalary" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label asp-for="DailySalary" class="control-label">Salario Diario</label>
+                                                        <input asp-for="DailySalary" class="form-control form-control-sm decimal" placeholder="$0.00" />
+                                                        <span asp-validation-for="DailySalary" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label asp-for="IntegratedDailySalary" class="control-label">Salario Diario Integrado</label>
+                                                        <input asp-for="IntegratedDailySalary" class="form-control form-control-sm decimal" placeholder="$0.00" />
+                                                        <span asp-validation-for="IntegratedDailySalary" class="text-danger"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -67,110 +98,100 @@
 
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Please include the details for salary information.
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Escribe la informaci&oacute;n correcta, recuerda con el d&oacute;digo postal puedes obtener el detalle de tu direcci&oacute;m.
                                                         </label>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
-                                                        <label asp-for="GrossSalary" class="control-label">Gross Salary</label>
-                                                        <input asp-for="GrossSalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="GrossSalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="NetSalary" class="control-label">Net Salary</label>
-                                                        <input asp-for="NetSalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="NetSalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="DailySalary" class="control-label">Daily Salary</label>
-                                                        <input asp-for="DailySalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="DailySalary" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label asp-for="IntegratedDailySalary" class="control-label">Integrated Daily Salary</label>
-                                                        <input asp-for="IntegratedDailySalary" class="form-control form-control-sm" placeholder="$0.00" />
-                                                        <span asp-validation-for="IntegratedDailySalary" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="step-3" class="">
-
-                                                <div class="form-row">
-                                                    <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Type the correct information, remember with the zip code you can get the all information.
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <label for="txtStreet" class="control-label">Street</label>
-                                                        <input id="txtStreet" class="form-control form-control-sm" required />
+                                                        <label for="txtStreet" class="control-label">Calle</label>
+                                                        <input id="txtStreet" name="txtStreet" class="form-control form-control-sm" required />
                                                         <span validation-for="txtStreet" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
-                                                        <label for="txtExternalNumber" class="control-label">External Number</label>
-                                                        <input id="txtExternalNumber" class="form-control form-control-sm" required />
+                                                        <label for="txtExternalNumber" class="control-label">N&uacute;mero Externo</label>
+                                                        <input id="txtExternalNumber" name="txtExternalNumber" class="form-control form-control-sm" required />
                                                         <span validation-for="txtExternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
-                                                        <label for="txtInternalNumber" class="control-label">Internal Number</label>
-                                                        <input id="txtInternalNumber" class="form-control form-control-sm" required />
+                                                        <label for="txtInternalNumber" class="control-label">N&uacute;mero Interno</label>
+                                                        <input id="txtInternalNumber" name="txtInternalNumber" class="form-control form-control-sm" />
                                                         <span validation-for="txtInternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
-                                                        <label for="txtZipCode" class="control-label">Zip Code</label>
-                                                        <input id="txtZipCode" class="form-control form-control-sm" required />
+                                                        <label for="txtZipCode" class="control-label">C&oacute;digo Postal</label>
+                                                        <input id="txtZipCode" name="txtZipCode" class="form-control form-control-sm" required />
                                                         <span validation-for="txtZipCode" class="text-danger"></span>
                                                     </div>
 
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="ZipCode" class="control-label">Neighborhood</label>
+                                                        <label for="ZipCode" class="control-label">Colonia</label>
                                                         <select class="form-control form-control-sm" name="ddColonia" id="ddColonia">
                                                             <option value="">-Please select one-</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="lblMunicipio" class="control-label">City</label>
+                                                        <label for="lblMunicipio" class="control-label">Municipio</label>
                                                         <label id="lblMunicipio" class="form-control form-control-sm">---</label>
                                                     </div>
 
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="lblEstado" class="control-label">State</label>
+                                                        <label for="lblEstado" class="control-label">Estado</label>
                                                         <label id="lblEstado" class="form-control form-control-sm">---</label>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="lblPais" class="control-label">Country</label>
+                                                        <label for="lblPais" class="control-label">Pa&iacute;s</label>
                                                         <label id="lblPais" class="form-control form-control-sm">---</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="step-3" class="">
+                                                <div class="form-row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Teclea un correo v&aacute;lido para crear la cuenta.
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="txtEmail" class="control-label">Cuenta de correo</label>
+                                                        <input id="txtEmail" name="txtEmail" class="form-control form-control-sm" placeholder="user@domain.com" required />
+                                                        <span validation-for="txtEmail" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="txtPassword" class="control-label">Contraseña [Auto-Generada]</label>
+                                                        <input type="text" id="txtPassword" name="txtPassword" class="form-control form-control-sm" value="@ViewBag.PasswordAutoGenerated" readonly>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="ddProfile" class="control-label">Perfil </label>
+                                                        <select id="ddProfile" name="ddProfile" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Profiles,"Value", "Text"))">
+                                                            <option value="">-Please select one-</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div id="step-4" class="">
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
-                                                            Type a correct email to generate the user account.
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Puedes capturar todos los medios de contacto que tenga el empleado.
                                                         </label>
                                                     </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="ZipCode" class="control-label">Email Account</label>
-                                                        <input id="txtEmail" class="form-control form-control-sm" placeholder="user@domain.com" required />
-                                                        <span validation-for="txtEmail" class="text-danger"></span>
+                                                    <div class="col-md-5 mb-3">
+                                                        <label for="txtContactDescription" class="control-label">Descripci&oacute;n</label>
+                                                        <input type="text" id="txtContactDescription" name="txtContactDescription" class="form-control form-control-sm">
                                                     </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="txtPassword" class="control-label">Pasword [Auto-Generated]</label>
-                                                        <input type="text" id="txtPassword" class="form-control form-control-sm" value="@ViewBag.PasswordAutoGenerated" readonly>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label for="ClientUser" class="control-label">Profile </label>
-                                                        <select asp-for="ClientUser" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.Profiles,"Value", "Text"))">
+                                                    <div class="col-md-5 mb-3">
+                                                        <label for="ddContactType" class="control-label">Tipo de Contacto </label>
+                                                        <select id="ddContactType" name="ddContactType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.ContactTypes,"Value", "Text"))">
                                                             <option value="">-Please select one-</option>
                                                         </select>
                                                     </div>
-
-                                                </div>
-                                            </div>
-                                            <div id="step-5" class="">
-                                                <div class="form-row">
-
+                                                    <div class="col-md-2 mb-3">
+                                                        <br />
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-pills" title="Agregar nuevo contacto" onclick="AddNewContact()"><span class="fa fa-plus"></span>&nbsp; Agregar </button>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="row" id="divContacts"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -178,29 +199,10 @@
 
                                 </div>
 
-                                <div class="col-md-5 mb-3">
-                                    <label for="txtContactDescription" class="control-label">Description</label>
-                                    <input type="text" id="txtContactDescription" class="form-control form-control-sm" required>
-                                </div>
-                                <div class="col-md-5 mb-3">
-                                    <label for="ddContactType" class="control-label">Contact Type </label>
-                                    <select id="ddContactType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.ContactTypes,"Value", "Text"))">
-                                        <option value="">-Please select one-</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <br />
-                                    <a class="btn btn-sm btn-outline-secondary btn-pills" title="Add New Contact" onclick="AddNewContact()"><span class="fa fa-plus"></span> </a>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <div class="row" id="divContacts"></div>
-
-
-                                </div>
                             </div>
-
-
-                            <button class="btn btn-info" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <input type="hidden" id="hddContacts" name="hddContacts" />
+                            <button class="btn btn-primary mt-2" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Guardar</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Guardar</button>
                         </form>
                     </div>
                 </div>
@@ -246,8 +248,8 @@
                     showStepURLhash: false,
                     lang:
                     { // Language variables
-                        next: 'Next',
-                        previous: 'Previous'
+                        next: 'Anterior',
+                        previous: 'Siguiente'
                     },
                     toolbarSettings:
                     {
@@ -302,7 +304,7 @@
 
         var AddNewContact = function () {
             var desciption = $('#txtContactDescription').val();
-            var contactType = $('#ddContactType :selected').text();
+            var contactType = $('#ddContactType :selected').val();
 
             if (desciption == "") {
                 _AlertSideXC("Please type a Contact Description.", "danger");
@@ -313,19 +315,105 @@
                 return;
             }
 
-            _addCardToRow(_NoContactType++, desciption, contactType, "bg-primary")
+            _addCardToRow(_NoContactType++, desciption, $('#ddContactType :selected').text(), contactType, "bg-primary")
+
+            $('#txtContactDescription').val('');
+            $('#ddContactType :selected').val('');
+            $('#txtContactDescription').focus();
         }
 
-        var _addCardToRow = function (id, description, contacttype, bg) {
-            var classCol = 'col-sm-3 col-md-3 col-lg-3';
-            var textDescription = $('<h4 />').text(description);
-            var textContactType = $('<h6 />').addClass("text-left").text(id + ".- " + contacttype);
-            var body = $('<div />').addClass('card-body').addClass("text-white").append(textContactType).append(textDescription);
-            var card = $('<div />').addClass(classCol).addClass('card ml-1 mr-1 mb-2 text-center ' + bg + ' shadow').append(body);
+        var _ListContactType = [];
 
-            $('#divContacts').append(card.fadeIn(1000));
+        var _addCardToRow = function (id, description, contacttype, contactTypeId, bg) {
+
+            var item = { id: id, description: description, contactTypeId: contactTypeId };
+
+            if (ExistsArrayItem(item)) {
+                _AlertSideXC("Ya se capturo el tipo de contacto y descripción.", "danger");
+                return;
+            }
+
+            _ListContactType.push(item);
+
+
+            var mainDiv = $("<div/>").addClass("col-sm-12 col-md-3 col-lg-3 col-xl-3 mb-2 animated fadeInLeft delay-3s").attr("id", "IdDiv" + id);
+            var card = $("<div/>").addClass("card bg-primary text-white shadow");
+            var cardBody = $("<div/>").addClass("card-body pill-item");
+            var span = $('<span/>').attr("aria-hidden", "true").html('&times;');
+            var button = $("<button/>").attr("type", "button").attr("aria-label", "Close").addClass("close").attr("onclick", "RemoveRowEspecialidades('IdDiv" + id + "', " + id + ")").append(span);
+            var textContactType = $("<h5/>").addClass("card-title font-weight-bold").text(contacttype);
+            var textDescription = $("<p />").addClass('card-text').text(description);
+            card.append(cardBody.append(button).append(textContactType).append(textDescription));
+            mainDiv.append(card);
+            $('#divContacts').append(mainDiv);
+
+
         }
+
+        var RemoveRowEspecialidades = function (rowId, id) {
+            _ListContactType.removeAt(id);
+            $(rowId).remove();
+        }
+
+        function ExistsArrayItem(item) {
+            var exist = false;
+            for (var i = 0; i < _ListContactType.length; i++) {
+                var row = _ListContactType[i];
+                if (row.contactTypeId == item.contactTypeId && row.description == item.description) {
+                    exist = true;
+                    break;
+                }
+            }
+            return exist;
+        }
+
+        function Save() {
+            $('#hddContacts').val(JSON.stringify(_ListContactType));
+            var name = $('#Name').val();
+            var lastName1 = $('#LastName1').val();
+            var lastname2 = $('#LastName2').val();
+            var positions = $('#ddPositions').val();
+            var grossSalary = $('#GrossSalary').val();
+            var netSalary = $('#NetSalary').val();
+            var dailySalary = $('#DailySalary').val();
+            var integratedDailySalary = $('#IntegratedDailySalary').val();
+            var street = $('#txtStreet').val();
+            var externalNumber = $('#txtExternalNumber').val();
+            var zipCode = $('#txtZipCode').val();
+            var colonia = $('#ddColonia').val();
+            var email = $('#txtEmail').val();
+            var profile = $('#ddProfile').val();
+            var contacts = $('#hddContacts').val();
+            var listError = [];
+
+            //Validations
+            if (name == "") listError.push("El nombre es un dato requerido.");
+            if (lastName1 == "") listError.push("El apellido paterno es un dato requerido.");
+            if (lastname2 == "") listError.push("El apellido materno es un dato requerido.");
+            if (positions == "") listError.push("La posición es un dato requerido.");
+            if (grossSalary == "") listError.push("El salario bruto es un dato requerido.");
+            if (netSalary == "") listError.push("El salario neto es un dato requerido.");
+            if (dailySalary == "") listError.push("El salario diario es un dato requerido.");
+            if (integratedDailySalary == "") listError.push("El salario diario integrado es un dato requerido.");
+            if (street == "") listError.push("La calle es un dato requerido.");
+            if (externalNumber == "") listError.push("El número externo es un dato requerido.");
+            if (zipCode == "") listError.push("El código postal es un dato requerido.");
+            if (colonia == "") listError.push("La colonia es un dato requerido.");
+            if (email == "") listError.push("El correo es un dato requerido.");
+            if (profile == "") listError.push("El perfil es un dato requerido.");
+            if (contacts == "") listError.push("Favor de capturar al menos un contacto.");
+
+            if (listError.length > 0) {
+                _AlertSideXC(listError, "danger", true);
+                return;
+            }
+
+            $('#btnSave').click();
+        }
+
+
 
     </script>
 
 }
+

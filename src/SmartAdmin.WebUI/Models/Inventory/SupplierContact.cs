@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SideXC.WebUI.Models.Human_Resources;
 using SideXC.WebUI.Models.Security;
+using SideXC.WebUI.Data;
 
 namespace SideXC.WebUI.Models.Inventory
 {
@@ -21,8 +22,8 @@ namespace SideXC.WebUI.Models.Inventory
         [MaxLength(100, ErrorMessage = "Maximum lenth is 100 characters for this field.")]
         public string Description { get; set; }
         public DateTime Created { get; set; }
-        public virtual ClientUser CreatedBy { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
         public DateTime Modified { get; set; }
-        public virtual ClientUser ModifiedBy { get; set; }
+        public virtual ApplicationUser ModifiedBy { get; set; }
     }
 }

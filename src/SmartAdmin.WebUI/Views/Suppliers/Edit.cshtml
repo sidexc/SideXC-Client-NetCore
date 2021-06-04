@@ -27,10 +27,9 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
-                        <form asp-action="Edit">
+                        <form asp-action="Create">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <input type="hidden" asp-for="Id" />
-                            <input type="hidden" id ="hddAddressId" name="hddAddressId" value="@Model.Address.Id"/>
+
                             <div class="row">
                                 <div class="col-md-12">
 
@@ -44,7 +43,7 @@
                                             <div id="step-1" class="">
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
+                                                        <label class="text-secondary font-weight-bold">
                                                             Type the general information for this new Supplier.
                                                         </label>
                                                     </div>
@@ -60,7 +59,7 @@
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label asp-for="PaymentDay" class="control-label">Payment Day</label>
-                                                        <input asp-for="PaymentDay" class="form-control form-control-sm" />
+                                                        <input asp-for="PaymentDay" class="form-control form-control-sm integer" />
                                                         <span asp-validation-for="PaymentDay" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-4 mb-3">
@@ -80,40 +79,33 @@
                                                             <option value="">-Please select one-</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-12 mb-3">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" asp-for="Active">
-                                                            <label class="custom-control-label" for="Active">Status</label>
-                                                        </div>
-                                                    </div>
-
                                                 </div>
                                             </div>
                                             <div id="step-2" class="">
                                                 <div class="form-row">
                                                     <div class="col-md-12 mb-3">
-                                                        <label class="text-secondary">
+                                                        <label class="text-secondary font-weight-bold">
                                                             Type the correct information, remember with the zip code you can get the all information.
                                                         </label>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
                                                         <label for="txtStreet" class="control-label">Street</label>
-                                                        <input id="txtStreet" name="txtStreet" class="form-control form-control-sm" value="@Model.Address.Street" required />
+                                                        <input id="txtStreet" name="txtStreet" class="form-control form-control-sm" required />
                                                         <span validation-for="txtStreet" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtExternalNumber" class="control-label">External Number</label>
-                                                        <input id="txtExternalNumber" name="txtExternalNumber" class="form-control form-control-sm" value="@Model.Address.ExternalNumber" required />
+                                                        <input id="txtExternalNumber" name="txtExternalNumber" class="form-control form-control-sm" required />
                                                         <span validation-for="txtExternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtInternalNumber" class="control-label">Internal Number</label>
-                                                        <input id="txtInternalNumber" name="txtInternalNumber" class="form-control form-control-sm" value="@Model.Address.InternalNumber" required />
+                                                        <input id="txtInternalNumber" name="txtInternalNumber" class="form-control form-control-sm" required />
                                                         <span validation-for="txtInternalNumber" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-2 mb-3">
                                                         <label for="txtZipCode" class="control-label">Zip Code</label>
-                                                        <input id="txtZipCode" name="txtZipCode" class="form-control form-control-sm" value="@Model.Address.Neighborhood.ZipCode" required />
+                                                        <input id="txtZipCode" name="txtZipCode" class="form-control form-control-sm" required />
                                                         <span validation-for="txtZipCode" class="text-danger"></span>
                                                     </div>
 
@@ -141,6 +133,32 @@
                                             </div>
                                             <div id="step-3" class="">
                                                 <div class="form-row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label class="text-secondary font-weight-bold">
+                                                            Puedes capturar todos los medios de contacto que tenga el empleado.
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="txtContactName" class="control-label">Nombre del Contacto</label>
+                                                        <input type="text" id="txtContactName" name="txtContactName" class="form-control form-control-sm">
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="txtContactDescription" class="control-label">Descripci&oacute;n</label>
+                                                        <input type="text" id="txtContactDescription" name="txtContactDescription" class="form-control form-control-sm">
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="ddContactType" class="control-label">Tipo de Contacto </label>
+                                                        <select id="ddContactType" name="ddContactType" class="form-control form-control-sm" asp-items="@(new SelectList(ViewBag.ContactTypes,"Value", "Text"))">
+                                                            <option value="">-Please select one-</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2 mb-3">
+                                                        <br />
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-pills" title="Agregar nuevo contacto" onclick="AddNewContact()"><span class="fa fa-plus"></span>&nbsp; Agregar </button>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="row" id="divContacts"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -150,7 +168,9 @@
 
                             </div>
 
-                            <button class="btn btn-info" type="submit"><span class="fa fa-save"></span>&nbsp; Save</button>
+                            <input type="hidden" id="hddContacts" name="hddContacts" />
+                            <button class="btn btn-primary mt-2" type="button" onclick="Save()"><span class="fa fa-save"></span>&nbsp; Guardar</button>
+                            <button id="btnSave" class="btn btn-primary d-none" type="submit"><span class="fa fa-save"></span>&nbsp; Guardar</button>
                         </form>
                     </div>
                 </div>
@@ -172,10 +192,17 @@
 
         $(document).ready(function () {
 
-            FillData();
-
             $("#txtZipCode").change(function () {
-                GetColoniasInfo($(this).val(), false);
+                _CallMethod('Employees', 'BuscarCodigoPostal', { zipcode: $(this).val() }, function (_result) {
+                    _datos = JSON.parse(_result);
+                    DropDownColonias(_datos);
+
+                    $("#lblPais").text(_datos[0].Pais);
+                    $("#lblEstado").text(_datos[0].Estado);
+                    $("#lblMunicipio").text(_datos[0].Municipio);
+                });
+
+
             });
 
             // Smart Wizard
@@ -230,26 +257,7 @@
 
         });
 
-        var FillData = function () {
-            $('#PaymentMethod').val(@Model.PaymentMethod.Id);
-            $('#Currency').val(@Model.Currency.Id);
-
-            GetColoniasInfo(@Model.Address.Neighborhood.ZipCode, true);
-        }
-
-        function GetColoniasInfo(zipCode, initial){
-            _CallMethod('Employees', 'BuscarCodigoPostal', { zipcode: zipCode  }, function (_result) {
-                _datos = JSON.parse(_result);
-                DropDownColonias(_datos, initial);
-
-                $("#lblPais").text(_datos[0].Pais);
-                $("#lblEstado").text(_datos[0].Estado);
-                $("#lblMunicipio").text(_datos[0].Municipio);
-            });
-
-        }
-
-        function DropDownColonias(data, initial) {
+        function DropDownColonias(data) {
             var ddColonias = $("#ddColonia");
             ddColonias.empty();
             var procemessage = '<option value="">Selecciona una Colonia</option>';
@@ -259,36 +267,114 @@
                 var option = $("<option />").attr("value", data[x].idColonia).text(data[x].Colonia);
                 ddColonias.append(option);
             }
+        }
 
-            if (initial) $("#ddColonia").val(@Model.Address.Neighborhood.Id);
+        function Save() {
+
+            $('#hddContacts').val(JSON.stringify(_ListContactType));
+            var name = $('#Name').val();
+            var rfc = $('#RFC').val();
+            var paymentDay = $('#PaymentDay').val();
+            var email = $('#Email').val();
+            var paymentMethod = $('#PaymentMethod').val();
+            var currency = $('#Currency').val();
+            var street = $('#txtStreet').val();
+            var externalNumber = $('#txtExternalNumber').val();
+            var zipCode = $('#txtZipCode').val();
+            var colonia = $('#ddColonia').val();
+            var email = $('#txtEmail').val();
+            var contacts = $('#hddContacts').val();
+            var listError = [];
+            //Validations
+            if (name == "") listError.push("El nombre del proveedor es un dato requerido.");
+            if (rfc == "") listError.push("El RFC del proveedor es un dato requerido.");
+            if (paymentDay == "") listError.push("El día de pago del proveedor es un dato requerido.");
+            if (email == "") listError.push("El correo es un dato requerido.");
+            if (paymentMethod == "") listError.push("El método de pago del proveedor es un dato requerido.");
+            if (currency == "") listError.push("Favor de seleccionar el tipo de moneda.");
+            if (street == "") listError.push("La calle es un dato requerido.");
+            if (externalNumber == "") listError.push("El número externo es un dato requerido.");
+            if (zipCode == "") listError.push("El código postal es un dato requerido.");
+            if (colonia == "") listError.push("La colonia es un dato requerido.");
+            if (contacts == "") listError.push("Favor de capturar al menos un contacto.");
+
+            if (listError.length > 0) {
+                _AlertSideXC(listError, "danger", true);
+                return;
+            }
+
+            $('#btnSave').click();
         }
 
         var _NoContactType = 1;
 
         var AddNewContact = function () {
+            var contactName = $('#txtContactName').val();
             var desciption = $('#txtContactDescription').val();
-            var contactType = $('#ddContactType :selected').text();
+            var contactType = $('#ddContactType :selected').val();
 
+            if (contactName == "") {
+                _AlertSideXC("El nombre del contacto es requerido.", "danger");
+                return;
+            }
             if (desciption == "") {
-                _AlertSideXC("Please type a Contact Description.", "danger");
+                _AlertSideXC("La descripción del contacto es requerida.", "danger");
                 return;
             }
             if (contactType == "") {
-                _AlertSideXC("Please select a Contact Type.", "danger");
+                _AlertSideXC("El tipo de contacto es requerido.", "danger");
                 return;
             }
 
-            _addCardToRow(_NoContactType++, desciption, contactType, "bg-primary")
+            _addCardToRow(_NoContactType++, contactName, desciption, $('#ddContactType :selected').text(), contactType, "bg-primary")
+
+            $('#txtContactName').val('');
+            $('#txtContactDescription').val('');
+            $('#ddContactType :selected').val('');
+            $('#txtContactDescription').focus();
         }
 
-        var _addCardToRow = function (id, description, contacttype, bg) {
-            var classCol = 'col-sm-3 col-md-3 col-lg-3';
-            var textDescription = $('<h4 />').text(description);
-            var textContactType = $('<h6 />').addClass("text-left").text(id + ".- " + contacttype);
-            var body = $('<div />').addClass('card-body').addClass("text-white").append(textContactType).append(textDescription);
-            var card = $('<div />').addClass(classCol).addClass('card ml-1 mr-1 mb-2 text-center ' + bg + ' shadow').append(body);
+        var _ListContactType = [];
 
-            $('#divContacts').append(card.fadeIn(1000));
+        var _addCardToRow = function (id, contactName, description, contacttype, contactTypeId, bg) {
+
+            var item = { id: id, contactName: contactName, description: description, contactTypeId: contactTypeId };
+
+            if (ExistsArrayItem(item)) {
+                _AlertSideXC("Ya se capturo el tipo de contacto y descripción.", "danger");
+                return;
+            }
+
+            _ListContactType.push(item);
+
+            var mainDiv = $("<div/>").addClass("col-sm-12 col-md-3 col-lg-3 col-xl-3 mb-2 animated fadeInLeft delay-3s").attr("id", "IdDiv" + id);
+            var card = $("<div/>").addClass("card bg-primary text-white shadow");
+            var cardBody = $("<div/>").addClass("card-body pill-item");
+            var span = $('<span/>').attr("aria-hidden", "true").html('&times;');
+            var button = $("<button/>").attr("type", "button").attr("aria-label", "Close").addClass("close").attr("onclick", "RemoveRowEspecialidades('IdDiv" + id + "', " + id + ")").append(span);
+            var textContactName = $("<h5/>").addClass("card-title font-weight-bold").text(contactName);
+            var textContactType = $("<h5/>").addClass("card-title font-weight-bold").text(contacttype);
+            var textDescription = $("<p />").addClass('card-text').text(description);
+            card.append(cardBody.append(button).append(textContactName).append(textContactType).append(textDescription));
+            mainDiv.append(card);
+            $('#divContacts').append(mainDiv);
+        }
+
+        var RemoveRowEspecialidades = function (rowId, id) {
+            _ListContactType.removeAt(id);
+            $(rowId).remove();
+        }
+
+        function ExistsArrayItem(item) {
+            var exist = false;
+            for (var i = 0; i < _ListContactType.length; i++) {
+                var row = _ListContactType[i];
+                if (row.contactTypeId == item.contactTypeId && row.description == item.description && row.contactName == item.contactName) {
+                    exist = true;
+                    break;
+                }
+            }
+            return exist;
         }
 
     </script>

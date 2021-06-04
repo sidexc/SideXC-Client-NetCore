@@ -10,8 +10,8 @@ using SideXC.WebUI.Data;
 namespace SideXC.WebUI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210506154535_update4")]
-    partial class update4
+    [Migration("20210604202508_Update2")]
+    partial class Update2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,6 +122,42 @@ namespace SideXC.WebUI.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SideXC.WebUI.Controllers.Inventory.InventorySummary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("MOQ")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("QuantityAvailable")
+                        .HasColumnType("float");
+
+                    b.Property<decimal>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("StandarCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InventorySummary");
+                });
+
             modelBuilder.Entity("SideXC.WebUI.Data.ApplicationRole", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +237,9 @@ namespace SideXC.WebUI.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("UID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -244,7 +283,6 @@ namespace SideXC.WebUI.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("EmployeeNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -279,7 +317,6 @@ namespace SideXC.WebUI.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("PhotUrl")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -299,6 +336,37 @@ namespace SideXC.WebUI.Migrations
                     b.HasIndex("PositionId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeConsecutive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Folio")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("EmployeeConsecutives");
                 });
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeContact", b =>
@@ -770,7 +838,6 @@ namespace SideXC.WebUI.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Serial")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -1208,7 +1275,6 @@ namespace SideXC.WebUI.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("InternalNumber")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -1703,6 +1769,21 @@ namespace SideXC.WebUI.Migrations
                     b.Navigation("Position");
                 });
 
+            modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeConsecutive", b =>
+                {
+                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("ModifiedBy");
+                });
+
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeContact", b =>
                 {
                     b.HasOne("SideXC.WebUI.Models.Security.ContactType", "ContactType")
@@ -1714,7 +1795,7 @@ namespace SideXC.WebUI.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("SideXC.WebUI.Models.Human_Resources.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Contacts")
                         .HasForeignKey("EmployeeId");
 
                     b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
@@ -2273,6 +2354,11 @@ namespace SideXC.WebUI.Migrations
                         .HasForeignKey("ProfileId");
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.Employee", b =>
+                {
+                    b.Navigation("Contacts");
                 });
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Supplier", b =>

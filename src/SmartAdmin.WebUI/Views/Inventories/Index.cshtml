@@ -8,7 +8,8 @@
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/#">Home</a></li>
         <li class="breadcrumb-item">Inventory</li>
-        <li class="breadcrumb-item active">Inventarios</li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Summary", "Inventories")">Sumarizado</a></li>
+        <li class="breadcrumb-item active">Detallado</li>
         <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
     </ol>
     <div class="row">
@@ -16,7 +17,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Information
+                        Informaci&oacute;n de @ViewBag.Material (@ViewBag.MaterialDescription)
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -37,7 +38,6 @@
                                     <th>Almácen</th>
                                     <th>Pasillo</th>
                                     <th>Localidad</th>
-                                    <th>MOQ</th>
                                     <th>Cantidad Disponible</th>
                                     <th>Std Cost</th>
                                     <th>Total Cost</th>
@@ -57,21 +57,6 @@
                                     var btnNewQty = "btnNewQty" + item.Id;
                                     var btnSaveNewQty = "btnSaveNewQty" + item.Id;
                                     var btnCancelNewQty = "btnCancelNewQty" + item.Id;
-                                    var color = "";
-                                    var diff = item.Material.MOQ - item.QuantityAvailable;
-
-                                    if (diff <= 10)
-                                    {
-                                        color = "bg-danger";
-                                    }
-                                    else if (diff <= 20)
-                                    {
-                                        color = "bg-warning";
-                                    }
-                                    else if(item.QuantityAvailable == 0)
-                                    {
-                                        color = "bg-danger";
-                                    }
                                     <tr>
                                         <td id='@tdBtn' class="text-center">
                                             <a class="btn btn-sm btn-outline-warning btn-pills" title="Movimiento de Localidad" asp-action="Edit" asp-route-id="@item.Id">
@@ -93,14 +78,13 @@
                                         <td>@Html.DisplayFor(modelItem => item.Location.Hallway.Warehouse.Description)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Location.Hallway.Description)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Location.Description)</td>
-                                        <td class="@color">@Html.DisplayFor(modelItem => item.Material.MOQ)</td>
                                         <td id='@tdQty'>
                                             <input type="hidden" id='@hddOriginalQty' name='@hddOriginalQty' value="@item.QuantityAvailable" />
                                             <span id='@lblQty' name='@lblQty'>@item.QuantityAvailable</span>
                                             <input type="text" id='@txtQty' name='@txtQty' value="@item.QuantityAvailable" class=" decimal form-control form-control-sm d-none" />
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.Material.StandardCost)</td>
-                                        <td>@totalCost</td>
+                                        <td>@string.Format("{0:C}", item.Material.StandardCost)</td>
+                                        <td>@string.Format("{0:C}", totalCost) </td>
                                         @*<td>@Html.DisplayFor(modelItem => item.Created)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Modified)</td>*@
                                     </tr>
@@ -138,6 +122,12 @@
         function SaveNewQty(id) {
             var newQty = $('#txtQty' + id).val();
             var originalQty = $('#hddOriginalQty' + id).val();
+
+            if (newQty == 0) {
+                _AlertSideXC("No hay inventario disponible.", "danger");
+                $('#txtQty' + id).focus();
+                return;
+            }
 
             if (newQty == "") {
                 _AlertSideXC("Favor de capturar una cantidad.", "danger");

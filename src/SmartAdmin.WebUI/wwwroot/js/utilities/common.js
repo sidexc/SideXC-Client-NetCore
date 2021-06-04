@@ -1,4 +1,6 @@
-﻿var _Path = location.host;
+﻿////const { isNull } = require("../datagrid/datatables/datatables.export");
+
+var _Path = location.host;
 var urlEnviroment;
 
 if (_Path.indexOf('localhost') >= 0 && _Path.indexOf(':') >= 0) {
@@ -60,15 +62,15 @@ var _CallMethod = function (_Controller, _Method, _Parameters, _fnSucces) {
         error: function (xhr, ajaxOptions, thrownError) {
             alert('Method: ' + _Method + '; Status: ' + xhr.status + '; ThrowError: ' + thrownError);
         },
-        //    beforeSend: function () { addLoader(); },
-        //    complete: function () { removeLoader(); }
+        beforeSend: function () { addLoader(); },
+        complete: function () { removeLoader(); }
     });
 };
 
 var addLoader = function () {
     var circle1 = $('<div />').addClass('circle loader');
     var circle2 = $('<div />').addClass('circle r-loader');
-    var imgDuti = $('<img />').prop('src', srcImage).prop('alt', '');
+    //var imgDuti = $('<img />').prop('src', srcImage).prop('alt', '');
     var divLoader = $('<div />').attr('id', 'divLoader101880').addClass('backdrop').append(circle1).append(circle2);
     $($(document).find('body')).append(divLoader);
 }
@@ -185,13 +187,23 @@ var _ConvertToDatatableWithButtons = function (tableName, fileName, indexColumnS
     });
 }
 
-var _AlertSideXC = function (message, color) {
+var _AlertSideXC = function (message, color, isList) {
+
+    if (isList == null || isList == undefined) isList = false;
+
+    var _ListMessages = isList == true ? message : message.split('|');
+    var code = "<ul>";
+    for (i = 0; i <= _ListMessages.length - 1; i++) {
+        code += " <li>" + _ListMessages[i] + "</li>";
+    }
+    code += "</ul>";
+
     var icon = color == "success" ? "fa fa-check-circle" : "fa fa-exclamation-circle";
     bootbox.alert({
         title: "<span class='" + icon + " text-" + color + " mr-2'></span> <span class='text-" + color + " fw-500'>SideXC Alerts</span>",
-        message: "<span>" + message + "</span>",
+        message: "<span>" + code + "</span>",
         centerVertical: true,
         className: "modal-alert",
-        closeButton: false        
+        closeButton: false
     });
 }
