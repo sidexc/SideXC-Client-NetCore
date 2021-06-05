@@ -42,6 +42,7 @@ namespace SideXC.WebUI
                 .AddRoleManager<RoleManager<ApplicationRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
             services.Configure<PasswordHasherOptions>(options =>
                 options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
             );

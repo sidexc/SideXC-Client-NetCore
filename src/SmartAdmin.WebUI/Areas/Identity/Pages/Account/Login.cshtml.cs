@@ -71,9 +71,12 @@ namespace SideXC.WebUI.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+
+                var user = await _userManager.GetUserAsync(User);
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false).ConfigureAwait(false); 
+                var result = await _SignInManager.PasswordSignInAsync(Input.Email, Input.Password, true, false).ConfigureAwait(false); 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
