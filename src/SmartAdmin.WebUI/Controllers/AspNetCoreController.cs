@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace SideXC.WebUI.Controllers
 {
     [AllowAnonymous]
-    public class AspNetCoreController : Controller
+    public class AspNetCoreController : BaseController
     {
-        public IActionResult Welcome() => View();
+        [Authorization]
+        public IActionResult Welcome() => View();                
         public IActionResult Interactive() => View();
         public IActionResult Editions() => View();
         public IActionResult Faq() => View();

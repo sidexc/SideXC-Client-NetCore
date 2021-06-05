@@ -37,7 +37,7 @@ namespace SideXC.WebUI.Controllers.Security
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UID,CompanyId,Email,Password,LastAccess,FailNumberAccess,Created,CreatedBy,Modified,ModifiedBy")] ClientUser clientUser)
+        public async Task<IActionResult> Create(ApplicationUser clientUser)
         {
             if (ClientUserExists(clientUser.Email))
             {
@@ -47,18 +47,17 @@ namespace SideXC.WebUI.Controllers.Security
 
             if (ModelState.IsValid)
             {
-                var statusUserActive = _context.StatusClientUsers.FirstOrDefault(s => s.Id == 1);
 
-                clientUser.UID = new Guid();
-                clientUser.CompanyId = 1; //Comms:Modificar a que sea variable
-                clientUser.Password = Common.GetRandomAlphanumericString(8);
-                clientUser.LastAccess = DateTime.Now;
-                clientUser.FailNumberAccess = 0;
-                clientUser.Status = statusUserActive;
-                clientUser.Created = DateTime.Now;
-                clientUser.CreatedBy = 1;//Comms:Modificar a que sea variable
-                clientUser.Modified = DateTime.Now;
-                clientUser.ModifiedBy = 1;//Comms:Modificar a que sea variable
+                clientUser.UID = Guid.NewGuid();
+                //clientUser.CompanyId = 1; //Comms:Modificar a que sea variable
+                //clientUser.Password = Common.GetRandomAlphanumericString(8);
+                //clientUser.LastAccess = DateTime.Now;
+                //clientUser.FailNumberAccess = 0;
+                //clientUser.Status = statusUserActive;
+                //clientUser.Created = DateTime.Now;
+                //clientUser.CreatedBy = 1;//Comms:Modificar a que sea variable
+                //clientUser.Modified = DateTime.Now;
+                //clientUser.ModifiedBy = 1;//Comms:Modificar a que sea variable
 
                 _context.Add(clientUser);
                 await _context.SaveChangesAsync();

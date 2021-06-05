@@ -16,12 +16,6 @@ namespace SideXC.WebUI.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        //public class ApplicationDbContext : DbContext
-        //{
-        //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        //{
-        //}
-
         //Identity Security
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public virtual DbSet<ApplicationRole> ApplicationRoles { get; set; }

@@ -38,19 +38,19 @@ namespace SideXC.WebUI
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.User.RequireUniqueEmail = false)
                 .AddRoleManager<RoleManager<ApplicationRole>>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+            services.Configure<PasswordHasherOptions>(options =>
+                options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
+            );
             services.AddMvc();
-
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));            
             services.AddTransient<IEmailSender, EmailSender>();
-
             services.AddControllersWithViews();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
-
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
@@ -73,12 +73,11 @@ namespace SideXC.WebUI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -10,17 +10,16 @@ namespace SideXC.WebUI.Controllers
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class Authorization : AuthorizeAttribute, IAuthorizationFilter
     {
-
         public void OnAuthorization(AuthorizationFilterContext filterContext)
         {
-            var user = filterContext.HttpContext.User;
-            var userEmail = filterContext.HttpContext.User.Identity.Name;
+            //var user = filterContext.HttpContext.User;
+            //var userEmail = filterContext.HttpContext.User.Identity.Name;
 
-            if (!user.Identity.IsAuthenticated)
-            {
-                //Necesito investigar como redireccionar a pagina de error en logeo
-                return;
-            }
+            //if (!user.Identity.IsAuthenticated)
+            //{
+            //    //Necesito investigar como redireccionar a pagina de error en logeo
+            //    return;
+            //}
         }
     }
 
@@ -29,7 +28,8 @@ namespace SideXC.WebUI.Controllers
         private readonly ApplicationDbContext _dbContext;
 
         public ApplicationUser UserLogged { get {
-                var userLogged = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name);
+                var email = "soporte@sidexc.com";// HttpContext.User.Identity.Name;
+                var userLogged = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Email == email);
                 return userLogged;
             }
         }
