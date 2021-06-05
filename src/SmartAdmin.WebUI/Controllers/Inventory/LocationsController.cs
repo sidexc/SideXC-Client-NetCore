@@ -12,30 +12,45 @@ using SideXC.WebUI.Models.Inventory;
 
 namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class LocationsController : Controller
+    public class LocationsController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public LocationsController(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        // GET: Locations
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Locations.Include(h=> h.Hallway).ThenInclude(w=> w.Warehouse).ToListAsync());
         }
-
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
             ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View();
         }
-
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
+        [HttpPost]        
         public async Task<IActionResult> Create(Location location, IFormCollection collection)
         {
             var hallwayId = int.Parse(collection["ddHallways"].ToString());
@@ -49,9 +64,9 @@ namespace SideXC.WebUI.Controllers.Inventory
             {
                 location.Active = true;
                 location.Created = DateTime.Now;
-                location.CreatedBy = null;//Comms:Modificar a que sea variable
+                location.CreatedBy = UserLogged;
                 location.Modified = DateTime.Now;
-                location.ModifiedBy = null;//Comms:Modificar a que sea variable
+                location.ModifiedBy = UserLogged;
                 _context.Add(location);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -60,8 +75,12 @@ namespace SideXC.WebUI.Controllers.Inventory
             ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View(location);
         }
-
-        // GET: Locations/Edit/5
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,7 +96,14 @@ namespace SideXC.WebUI.Controllers.Inventory
             }
             return View(location);
         }
-
+        /// <summary>
+        /// Edit post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="location"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Location location, IFormCollection collection)
@@ -86,10 +112,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             var hallwayId = int.Parse(collection["ddHallways"].ToString());
             var hallway = _context.Hallways.Include(w => w.Warehouse).FirstOrDefault(w => w.Id == hallwayId);
             location.Hallway = hallway;
-            if (id != location.Id)
-            {
-                return NotFound();
-            }
+            if (id != location.Id) { return NotFound(); }
             if (location.Description != description)
             {
                 if (LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse))
@@ -102,22 +125,16 @@ namespace SideXC.WebUI.Controllers.Inventory
                 try
                 {
                     location.Created = DateTime.Now;
-                    location.CreatedBy = null;//Comms:Modificar a que sea variable
+                    location.CreatedBy = UserLogged;
                     location.Modified = DateTime.Now;
-                    location.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    location.ModifiedBy = UserLogged;
                     _context.Update(location);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!LocationExists(location.Description, location.Hallway, location.Hallway.Warehouse)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -125,12 +142,22 @@ namespace SideXC.WebUI.Controllers.Inventory
             ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             return View(location);
         }
-
+        /// <summary>
+        /// Validar nuevo item
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="hallway"></param>
+        /// <param name="warehouse"></param>
+        /// <returns></returns>
         private bool LocationExists(string description, Hallway hallway, Warehouse warehouse)
         {
             return _context.Locations.Any(e => e.Description == description && e.Hallway.Id == hallway.Id && e.Hallway.Warehouse.Id == warehouse.Id );
         }
-
+        /// <summary>
+        /// Ajax method get hallways
+        /// </summary>
+        /// <param name="warehouseId"></param>
+        /// <returns></returns>
         public string GetHallways(int warehouseId)
         {
             var list = _context.Hallways.Where(h => h.Warehouse.Id == warehouseId).Select(s=> new { s.Id, s.Description }).ToList();

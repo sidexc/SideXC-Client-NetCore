@@ -8,12 +8,8 @@ using System.Linq;
 namespace SideXC.WebUI.Controllers
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public class UserAuthentication : AuthorizeAttribute, IAuthorizationFilter
+    public class Authorization : AuthorizeAttribute, IAuthorizationFilter
     {
-        private readonly ApplicationDbContext _context;
-        ApplicationUser _UserLogged;
-
-        public ApplicationUser UserLogged { get { return _UserLogged; } }
 
         public void OnAuthorization(AuthorizationFilterContext filterContext)
         {
@@ -25,18 +21,17 @@ namespace SideXC.WebUI.Controllers
                 //Necesito investigar como redireccionar a pagina de error en logeo
                 return;
             }
-            else
-            {
-                var userLogged = _context.ApplicationUsers.FirstOrDefault(u => u.Email == filterContext.HttpContext.User.Identity.Name);
-                _UserLogged = userLogged;
-            }
         }
-
     }
 
     public class BaseController : Controller
     {
+        private readonly ApplicationDbContext _dbContext;
 
-
+        public ApplicationUser UserLogged { get {
+                var userLogged = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name);
+                return userLogged;
+            }
+        }
     }
 }

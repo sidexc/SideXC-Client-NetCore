@@ -11,19 +11,22 @@ using SideXC.WebUI.Models.Human_Resources;
 
 namespace SideXC.WebUI.Controllers.HumanResources
 {
-    public class PositionsController : Controller
+    public class PositionsController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public PositionsController(ApplicationDbContext context)
         {
             _context = context;
         }
-
         /// <summary>
         /// Index view
         /// </summary>
         /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Positions.ToListAsync());
@@ -32,6 +35,7 @@ namespace SideXC.WebUI.Controllers.HumanResources
         /// Create view
         /// </summary>
         /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             return View();
@@ -41,6 +45,7 @@ namespace SideXC.WebUI.Controllers.HumanResources
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] Position position)
@@ -53,9 +58,9 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 position.Active = true;
                 position.Created = DateTime.Now;
-                position.CreatedBy = null;//Comms:Modificar a que sea variable
+                position.CreatedBy = UserLogged;
                 position.Modified = DateTime.Now;
-                position.ModifiedBy = null;//Comms:Modificar a que sea variable
+                position.ModifiedBy = UserLogged;
                 _context.Add(position);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -67,13 +72,13 @@ namespace SideXC.WebUI.Controllers.HumanResources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var position = await _context.Positions.FindAsync(id);
             if (position == null)
             {
@@ -87,15 +92,13 @@ namespace SideXC.WebUI.Controllers.HumanResources
         /// <param name="id"></param>
         /// <param name="position"></param>
         /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] Position position, IFormCollection collection)
         {
             var description = collection["hddDescription"].ToString();
-            if (id != position.Id)
-            {
-                return NotFound();
-            }
+            if (id != position.Id) { return NotFound(); }
             if (position.Description != description)
             {
                 if (PositionExists(position.Description))
@@ -108,26 +111,21 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 try
                 {
                     position.Modified = DateTime.Now;
+                    position.ModifiedBy = UserLogged;
                     _context.Update(position);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PositionExists(position.Description))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!PositionExists(position.Description)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(position);
         }
         /// <summary>
-        /// 
+        /// Valida si existe el nuevo item
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

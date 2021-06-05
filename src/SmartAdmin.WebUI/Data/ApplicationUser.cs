@@ -9,5 +9,7 @@ namespace SideXC.WebUI.Data
     public class ApplicationUser : IdentityUser<int>
     {
         public Guid UID { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Modified { get; set; }
     }
 }

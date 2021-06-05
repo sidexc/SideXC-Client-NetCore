@@ -20,18 +20,28 @@ namespace SideXC.WebUI.Controllers.HumanResources
     public class EmployeesController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public EmployeesController(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Employees.Include(p=> p.Position).Include(e=> e.Contacts).ThenInclude(c=> c.ContactType).Include(a=> a.Address).ThenInclude(n=> n.Neighborhood).ThenInclude(c=> c.City).ThenInclude(s=> s.State).ThenInclude(c=> c.Country).ToListAsync());
         }
-
-        // GET: Employees/Create
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             var listPositions = _context.Positions.Where(c => c.Active == true).ToList();
@@ -43,12 +53,17 @@ namespace SideXC.WebUI.Controllers.HumanResources
             ViewBag.ContactTypes = new SelectList(listContactTypes, "Id", "Description", 0);
             return View();
         }
-
-        [UserAuthentication]
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee, IFormCollection collection)
-        {
+        {           
             var name = collection["Name"].ToString();
             var lastName1 = collection["LastName1"].ToString();
             var lastName2 = collection["LastName2"].ToString();
@@ -70,7 +85,6 @@ namespace SideXC.WebUI.Controllers.HumanResources
             var listContacts = JsonConvert.DeserializeObject<List<lContacts>>(contacts).ToList();
             var position = _context.Positions.FirstOrDefault(p => p.Id == positionId);
             var colonia = _context.Neighborhoods.Include(c => c.City).ThenInclude(s => s.State).ThenInclude(c => c.Country).FirstOrDefault(n => n.Id == coloniaId);
-
             // Create address
             var address = new Address()
             {
@@ -80,9 +94,9 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 Neighborhood = colonia,
                 Active = true,
                 Created = DateTime.Now,
-                CreatedBy = null,//Comms:Modificar a que sea variable
+                CreatedBy = UserLogged,
                 Modified = DateTime.Now,
-                ModifiedBy = null//Comms:Modificar a que sea variable
+                ModifiedBy = UserLogged
             };
             //Create contacts
             foreach(var item in listContacts)
@@ -93,30 +107,26 @@ namespace SideXC.WebUI.Controllers.HumanResources
                     ContactType = contactType,
                     Description = item.Description,                    
                     Created = DateTime.Now,
-                    CreatedBy = null,//Comms:Modificar a que sea variable
+                    CreatedBy = UserLogged,
                     Modified = DateTime.Now,
-                    ModifiedBy = null//Comms:Modificar a que sea variable
+                    ModifiedBy = UserLogged
                 };
                 employee.AddContact(contact);
             }
             //create users
             var existsUser = _context.ClientUsers.FirstOrDefault(e => e.Email == email);
             var statusClient = _context.StatusClientUsers.FirstOrDefault(s=> s.Id == 2);
-            var newUser = new ClientUser() {
+            var newUser = new ApplicationUser() {
                 UID = Guid.NewGuid(),
                 Email = email,
-                Password = password,
-                Profile = profile,
-                LastAccess = DateTime.Now,
-                FailNumberAccess = 0,
-                Status = statusClient,
+                PasswordHash = password,
+                LockoutEnabled = false,
+                EmailConfirmed = false,
+                AccessFailedCount = 0,
                 Created = DateTime.Now,
-                CreatedBy = 0,//Comms:Modificar a que sea variable
-                Modified = DateTime.Now,
-                ModifiedBy = 0//Comms:Modificar a que sea variable
+                Modified = DateTime.Now
             };
-
-
+            //Valida si existe usuario
             if(existsUser != null)
             {
                 ModelState.AddModelError("err", "Ya existe el empleado con este correo.");
@@ -129,13 +139,12 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 ViewBag.ContactTypes = new SelectList(listContactTypes, "Id", "Description", 0);
                 return View(employee);
             }
-
             _context.Add(newUser);
-
+            //Llena datos de empleado
             employee.Name = name;
             employee.LastName1 = lastName1;
             employee.LastName2 = lastName2;
-            employee.EmployeeNumber = CreateEmployeeConsecutive(); 
+            employee.EmployeeNumber = CreateEmployeeConsecutive(UserLogged); 
             employee.GrossSalary = grossSalary;
             employee.NetSalary = netSalary;
             employee.DailySalary = dailySalary;
@@ -144,28 +153,33 @@ namespace SideXC.WebUI.Controllers.HumanResources
             employee.Address = address;
             employee.PhotUrl = string.Empty;
             employee.Active = true;
+            employee.ClientUser = newUser;
             employee.Created = DateTime.Now;
-            employee.CreatedBy = null;//Comms:Modificar a que sea variable
+            employee.CreatedBy = UserLogged;
             employee.Modified = DateTime.Now;
-            employee.ModifiedBy = null;//Comms:Modificar a que sea variable
+            employee.ModifiedBy = UserLogged;
             _context.Add(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        private string CreateEmployeeConsecutive()
+        /// <summary>
+        /// Consecutivo de número de empleado
+        /// </summary>
+        /// <param name="userLogged"></param>
+        /// <returns></returns>
+        private string CreateEmployeeConsecutive(ApplicationUser userLogged)
         {
             var hayConsecutivo = _context.EmployeeConsecutives.FirstOrDefault(s => s.Created == DateTime.Today);
             EmployeeConsecutive consecutive;
-
             if (hayConsecutivo == null)
             {
                 consecutive = new EmployeeConsecutive()
                 {
                     Folio = 1,
                     Created = DateTime.Today,
-                    CreatedBy = null,
+                    CreatedBy = userLogged,
                     Modified = DateTime.Today,
-                    ModifiedBy = null
+                    ModifiedBy = userLogged
                 };
                 _context.Add(consecutive);
                 _context.SaveChanges();
@@ -176,71 +190,70 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 consecutive.Folio += 1;
                 _context.SaveChanges();
             }
-
             return string.Concat(DateTime.Today.Year.ToString().PadLeft(4, '0'),
                                     DateTime.Today.Month.ToString().PadLeft(2, '0'),
                                     DateTime.Today.Day.ToString().PadLeft(2, '0'),
                                     consecutive.Folio.ToString().PadLeft(3, '0')
                                     );
         }
-
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) { return NotFound(); }
             var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            if (employee == null)  { return NotFound(); }
             return View(employee);
         }
-
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName1,LastName2,PhotUrl,GrossSalary,NetSalary,DailySalary,IntegratedDailySalary,Active,Created,Modified")] Employee employee)
         {
-            if (id != employee.Id)
-            {
-                return NotFound();
-            }
+            if (id != employee.Id) { return NotFound(); }
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     employee.Modified = DateTime.Now;
-                    employee.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    employee.ModifiedBy = UserLogged;
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!EmployeeExists(employee.Id)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
-
+        /// <summary>
+        /// Valida empleado existente
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool EmployeeExists(int id)
         {
             return _context.Employees.Any(e => e.Id == id);
         }
-
+        /// <summary>
+        /// Buscar codigo postal
+        /// </summary>
+        /// <param name="zipcode"></param>
+        /// <returns></returns>
         public string BuscarCodigoPostal(string zipcode)
         {
             var colonias = _context.Neighborhoods.Where(m => m.ZipCode == zipcode).Include(a => a.City).ThenInclude(t => t.State).ThenInclude(s => s.Country).ToList();
@@ -255,7 +268,6 @@ namespace SideXC.WebUI.Controllers.HumanResources
                                 Pais = c.City?.State?.Country?.Description
                             }
                 ).ToList();
-
             return JsonConvert.SerializeObject(query);
         }
     }

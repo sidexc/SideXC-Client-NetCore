@@ -12,25 +12,41 @@ using SideXC.WebUI.Models.Inventory;
 
 namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class PaymentMethodsController : Controller
+    public class PaymentMethodsController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public PaymentMethodsController(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.PaymentMethods.ToListAsync());
         }
-
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             return View();
         }
-
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="paymentMethod"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod)
@@ -39,14 +55,13 @@ namespace SideXC.WebUI.Controllers.Inventory
             {
                 ModelState.AddModelError("Error", "Ya existe un metódo de pago con esa descripción.");
             }
-
             if (ModelState.IsValid)
             {
                 paymentMethod.Active = true;
                 paymentMethod.Created = DateTime.Now;
-                paymentMethod.CreatedBy = null;//Comms:Modificar a que sea variable
+                paymentMethod.CreatedBy = UserLogged;
                 paymentMethod.Modified = DateTime.Now;
-                paymentMethod.ModifiedBy = null;//Comms:Modificar a que sea variable
+                paymentMethod.ModifiedBy = UserLogged;
                 _context.Add(paymentMethod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -58,17 +73,12 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>        
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) { return NotFound(); }
             var paymentMethod = await _context.PaymentMethods.FindAsync(id);
-            if (paymentMethod == null)
-            {
-                return NotFound();
-            }
+            if (paymentMethod == null) { return NotFound(); }
             return View(paymentMethod);
         }
         /// <summary>
@@ -77,15 +87,13 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// <param name="id"></param>
         /// <param name="paymentMethod"></param>
         /// <returns></returns>        
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,NumberOfDays,Active,Created,Modified")] PaymentMethod paymentMethod, IFormCollection collection)
         {
             var description = collection["hddDescription"].ToString();
-            if (id != paymentMethod.Id)
-            {
-                return NotFound();
-            }
+            if (id != paymentMethod.Id) { return NotFound(); }
             if(paymentMethod.Description != description)
             {
                 if (PaymentMethodExists(paymentMethod.Description))
@@ -98,20 +106,14 @@ namespace SideXC.WebUI.Controllers.Inventory
                 try
                 {
                     paymentMethod.Modified = DateTime.Now;
-                    paymentMethod.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    paymentMethod.ModifiedBy = UserLogged;
                     _context.Update(paymentMethod);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaymentMethodExists(paymentMethod.Description))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!PaymentMethodExists(paymentMethod.Description)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }

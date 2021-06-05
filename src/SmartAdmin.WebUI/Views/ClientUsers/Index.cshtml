@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SideXC.WebUI.Models.Security.ClientUser>
+﻿@model IEnumerable<SideXC.WebUI.Data.ApplicationUser>
 
 @{
     ViewData["Title"] = "Index";
@@ -30,35 +30,20 @@
                         <table id="tableReport">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    @*<th class="text-center">
                                         <a class="btn btn-sm btn-outline-light btn-pills" title="Create New Item" asp-action="Create"><span class="fa fa-plus"></span> </a>
-                                    </th>
+                                    </th>*@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Email)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Password)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.LastAccess)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.FailNumberAccess)
-                                    </th>
-                                    <th>
-                                        @*@Html.DisplayNameFor(model => model.Active)*@
+                                        Contraseña
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.Modified)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.ModifiedBy)
-                                    </th>
-                                    <th>
                                         @Html.DisplayNameFor(model => model.Created)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CreatedBy)
                                     </th>
                                 </tr>
                             </thead>
@@ -66,35 +51,20 @@
                                 @foreach (var item in Model)
                                 {
                                 <tr>
-                                    <td id="tdBtn" class="text-center">
+                                    @*<td id="tdBtn" class="text-center">
                                         <a class="btn btn-sm btn-outline-warning btn-pills" title="Edit item @item.Email" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-edit"></span></a>
-                                    </td>
+                                    </td>*@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Password)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastAccess)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FailNumberAccess)
-                                    </td>
-                                    <td>
-                                        @*@Html.DisplayFor(modelItem => item.Active)*@
+                                        @Html.DisplayFor(modelItem => item.PasswordHash)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Modified)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ModifiedBy)
-                                    </td>
-                                    <td>
                                         @Html.DisplayFor(modelItem => item.Created)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CreatedBy)
                                     </td>
                                 </tr>
                                 }

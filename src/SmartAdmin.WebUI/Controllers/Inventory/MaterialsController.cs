@@ -12,21 +12,30 @@ using SideXC.WebUI.Models.Inventory;
 
 namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class MaterialsController : Controller
+    public class MaterialsController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public MaterialsController(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        // GET: Materials
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Materials.Include(u=> u.UnitMeassure).Include(i=> i.MaterialType).Include(i => i.MaterialTypeCost).Include(s=> s.Supplier).ToListAsync());
+            return View(await _context.Materials.Include(u => u.UnitMeassure).Include(i => i.MaterialType).Include(i => i.MaterialTypeCost).Include(s => s.Supplier).ToListAsync());
         }
-
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             var listUnitMeassures = _context.UnitMeassures.Where(c => c.Active == true).ToList();
@@ -39,18 +48,24 @@ namespace SideXC.WebUI.Controllers.Inventory
             ViewBag.Suppliers = new SelectList(listSuppliers, "Id", "Name");
             return View();
         }
-
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Material material, IFormCollection collection)
         {
-            if (MaterialExists(material.Name)){
+            if (MaterialExists(material.Name))
+            {
                 ModelState.AddModelError("Error", "Ya existe un material con ese nombre");
             }
-
             if (ModelState.IsValid)
             {
-                var unitMeassure = _context.UnitMeassures.FirstOrDefault(u=> u.Id == int.Parse(collection["ddUnitMeassure"].ToString()));
+                var unitMeassure = _context.UnitMeassures.FirstOrDefault(u => u.Id == int.Parse(collection["ddUnitMeassure"].ToString()));
                 var materialType = _context.MaterialTypes.FirstOrDefault(u => u.Id == int.Parse(collection["ddMaterialType"].ToString()));
                 var materialTypeCost = _context.MaterialTypeCosts.FirstOrDefault(u => u.Id == int.Parse(collection["ddMaterialTypeCost"].ToString()));
                 var supplier = _context.Suppliers.FirstOrDefault(u => u.Id == int.Parse(collection["ddSupplier"].ToString()));
@@ -61,9 +76,9 @@ namespace SideXC.WebUI.Controllers.Inventory
                 material.Serial = CreateBarCode(material);
                 material.Active = true;
                 material.Created = DateTime.Now;
-                material.CreatedBy = null;//Comms:Modificar a que sea variable
+                material.CreatedBy = UserLogged;
                 material.Modified = DateTime.Now;
-                material.ModifiedBy = null;//Comms:Modificar a que sea variable
+                material.ModifiedBy = UserLogged;
                 _context.Add(material);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,16 +102,15 @@ namespace SideXC.WebUI.Controllers.Inventory
         {
             var hayConsecutivo = _context.SerialConsecutives.FirstOrDefault(s => s.Created == DateTime.Today);
             SerialConsecutive consecutive;
-
-            if(hayConsecutivo == null)
+            if (hayConsecutivo == null)
             {
                 consecutive = new SerialConsecutive()
                 {
                     Folio = 1,
                     Created = DateTime.Today,
-                    CreatedBy = null,
+                    CreatedBy = UserLogged,
                     Modified = DateTime.Today,
-                    ModifiedBy = null
+                    ModifiedBy = UserLogged
                 };
                 _context.Add(consecutive);
                 _context.SaveChanges();
@@ -107,13 +121,12 @@ namespace SideXC.WebUI.Controllers.Inventory
                 consecutive.Folio += 1;
                 _context.SaveChanges();
             }
-
-            return string.Concat(material.Name.Substring(0,2),
+            return string.Concat(material.Name.Substring(0, 2),
                                     material.MaterialTypeCost.Code,
-                                    DateTime.Today.Year.ToString().PadLeft(4,'0'),
+                                    DateTime.Today.Year.ToString().PadLeft(4, '0'),
                                     DateTime.Today.Month.ToString().PadLeft(2, '0'),
                                     DateTime.Today.Day.ToString().PadLeft(2, '0'),
-                                    consecutive.Folio.ToString().PadLeft(3,'0')
+                                    consecutive.Folio.ToString().PadLeft(3, '0')
                                     );
         }
         /// <summary>
@@ -121,6 +134,7 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -136,10 +150,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             ViewBag.MaterialTypeCosts = new SelectList(listMaterialTypeCosts, "Id", "Description");
             ViewBag.Suppliers = new SelectList(listSuppliers, "Id", "Name");
             var material = await _context.Materials.FindAsync(id);
-            if (material == null)
-            {
-                return NotFound();
-            }
+            if (material == null) { return NotFound(); }
             return View(material);
         }
         /// <summary>
@@ -149,15 +160,12 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// <param name="material"></param>
         /// <param name="collection"></param>
         /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Material material, IFormCollection collection)
         {
-            if (id != material.Id)
-            {
-                return NotFound();
-            }
-
+            if (id != material.Id) { return NotFound(); }
             if (ModelState.IsValid)
             {
                 try
@@ -172,20 +180,14 @@ namespace SideXC.WebUI.Controllers.Inventory
                     material.Supplier = supplier;
                     material.Active = true;
                     material.Modified = DateTime.Now;
-                    material.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    material.ModifiedBy = UserLogged;
                     _context.Update(material);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MaterialExists(material.Name))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!MaterialExists(material.Name)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }

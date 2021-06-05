@@ -10,15 +10,15 @@ using SideXC.WebUI.Data;
 namespace SideXC.WebUI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210603230639_update")]
-    partial class update
+    [Migration("20210605044131_create")]
+    partial class create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -201,6 +201,9 @@ namespace SideXC.WebUI.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -213,6 +216,9 @@ namespace SideXC.WebUI.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -1742,15 +1748,15 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ClientUser")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ClientUser")
                         .WithMany()
                         .HasForeignKey("ClientUserId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1771,11 +1777,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeConsecutive", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1790,7 +1796,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("ContactTypeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1798,7 +1804,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany("Contacts")
                         .HasForeignKey("EmployeeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1813,7 +1819,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeePositionHistory", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1821,7 +1827,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1840,7 +1846,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeSalaryHistory", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1848,7 +1854,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1861,11 +1867,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.EmployeeType", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1876,7 +1882,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Human_Resources.Position", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1884,7 +1890,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeTypeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1897,11 +1903,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Currency", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1912,11 +1918,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Hallway", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1933,7 +1939,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Inventory", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1945,7 +1951,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("MaterialId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1960,7 +1966,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.InventoryLog", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -1968,7 +1974,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("LocationId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -1993,7 +1999,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Location", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2001,7 +2007,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("HallwayId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2014,7 +2020,7 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Material", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2026,7 +2032,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("MaterialTypeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2053,11 +2059,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.MaterialType", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2068,11 +2074,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.MaterialTypeCost", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2083,11 +2089,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.PaymentMethod", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2098,11 +2104,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.SerialConsecutive", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2117,7 +2123,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -2125,7 +2131,7 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2150,11 +2156,11 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("ContactTypeId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2171,11 +2177,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.TransactionType", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2186,11 +2192,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.UnitMeassure", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2201,11 +2207,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Inventory.Warehouse", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2216,11 +2222,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Map.Address", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2237,11 +2243,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Map.City", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2258,11 +2264,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Map.Country", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2277,11 +2283,11 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("CityId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2298,11 +2304,11 @@ namespace SideXC.WebUI.Migrations
                         .WithMany()
                         .HasForeignKey("CountryId");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
@@ -2330,11 +2336,11 @@ namespace SideXC.WebUI.Migrations
 
             modelBuilder.Entity("SideXC.WebUI.Models.Security.ContactType", b =>
                 {
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "CreatedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("SideXC.WebUI.Models.Security.ClientUser", "ModifiedBy")
+                    b.HasOne("SideXC.WebUI.Data.ApplicationUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 

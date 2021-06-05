@@ -11,30 +11,41 @@ using SideXC.WebUI.Models.Human_Resources;
 
 namespace SideXC.WebUI.Controllers.HumanResources
 {
-    public class EmployeeTypesController : Controller
+    public class EmployeeTypesController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public EmployeeTypesController(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        // GET: EmployeeTypes
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.EmployeeTypes.ToListAsync());
         }
-
-        // GET: EmployeeTypes/Create
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: EmployeeTypes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="employeeType"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType)
@@ -47,24 +58,27 @@ namespace SideXC.WebUI.Controllers.HumanResources
             {
                 employeeType.Active = true;
                 employeeType.Created = DateTime.Now;
-                employeeType.CreatedBy = null;//Comms:Modificar a que sea variable
+                employeeType.CreatedBy = UserLogged;
                 employeeType.Modified = DateTime.Now;
-                employeeType.ModifiedBy = null;//Comms:Modificar a que sea variable
+                employeeType.ModifiedBy = UserLogged;
                 _context.Add(employeeType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(employeeType);
         }
-
-        // GET: EmployeeTypes/Edit/5
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var employeeType = await _context.EmployeeTypes.FindAsync(id);
             if (employeeType == null)
             {
@@ -72,19 +86,20 @@ namespace SideXC.WebUI.Controllers.HumanResources
             }
             return View(employeeType);
         }
-
-        // POST: EmployeeTypes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="employeeType"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] EmployeeType employeeType, IFormCollection collection)
         {
             var description = collection["hddDescription"].ToString();
-            if (id != employeeType.Id)
-            {
-                return NotFound();
-            }
+            if (id != employeeType.Id) { return NotFound(); }
             if (employeeType.Description != description)
             {
                 if (EmployeeTypeExists(employeeType.Description))
@@ -97,25 +112,24 @@ namespace SideXC.WebUI.Controllers.HumanResources
                 try
                 {
                     employeeType.Modified = DateTime.Now;
+                    employeeType.ModifiedBy = UserLogged;
                     _context.Update(employeeType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeTypeExists(employeeType.Description))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!EmployeeTypeExists(employeeType.Description)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(employeeType);
         }
-
+        /// <summary>
+        /// Valida si existe el nuevo item
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
         private bool EmployeeTypeExists(string description)
         {
             return _context.EmployeeTypes.Any(e => e.Description == description);

@@ -11,26 +11,41 @@ using SideXC.WebUI.Models.Inventory;
 
 namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class MaterialTypesController : Controller
+    public class MaterialTypesController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public MaterialTypesController(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        // GET: MaterialTypes
+        /// <summary>
+        /// Index view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index()
         {
             return View(await _context.MaterialTypes.ToListAsync());
         }
-
+        /// <summary>
+        /// Create view
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             return View();
         }
-
+        /// <summary>
+        /// Create post
+        /// </summary>
+        /// <param name="materialType"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Active,Created,Modified")] MaterialType materialType)
@@ -43,41 +58,42 @@ namespace SideXC.WebUI.Controllers.Inventory
             {
                 materialType.Active = true;
                 materialType.Created = DateTime.Now;
-                materialType.CreatedBy = null;//Comms:Modificar a que sea variable
+                materialType.CreatedBy = UserLogged;
                 materialType.Modified = DateTime.Now;
-                materialType.ModifiedBy = null;//Comms:Modificar a que sea variable
+                materialType.ModifiedBy = UserLogged;
                 _context.Add(materialType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(materialType);
         }
-
-        // GET: MaterialTypes/Edit/5
+        /// <summary>
+        /// Edit view
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) { return NotFound(); }
             var materialType = await _context.MaterialTypes.FindAsync(id);
-            if (materialType == null)
-            {
-                return NotFound();
-            }
+            if (materialType == null) { return NotFound(); }
             return View(materialType);
         }
-
+        /// <summary>
+        /// Edit post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="materialType"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Active,Created,Modified")] MaterialType materialType, IFormCollection collection)
         {
             var description = collection["hddDescription"].ToString();
-            if (id != materialType.Id)
-            {
-                return NotFound();
-            }
+            if (id != materialType.Id) { return NotFound(); }
             if (materialType.Description != description)
             {
                 if (MaterialTypeExists(materialType.Description))
@@ -90,26 +106,19 @@ namespace SideXC.WebUI.Controllers.Inventory
                 try
                 {
                     materialType.Modified = DateTime.Now;
-                    materialType.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    materialType.ModifiedBy = UserLogged;
                     _context.Update(materialType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MaterialTypeExists(materialType.Description))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!MaterialTypeExists(materialType.Description)) { return NotFound(); }
+                    else { throw; }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(materialType);
         }
-
         /// <summary>
         /// validation
         /// </summary>

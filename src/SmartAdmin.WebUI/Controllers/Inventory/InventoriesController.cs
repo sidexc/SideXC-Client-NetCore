@@ -14,38 +14,46 @@ using SideXC.WebUI.Models.Local;
 
 namespace SideXC.WebUI.Controllers.Inventory
 {
-    public class InventoriesController : Controller
+    public class InventoriesController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context"></param>
         public InventoriesController(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Inventory summary
+        /// </summary>
+        /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Summary()
         {
             var model = (
                            from i in _context.Inventories
-                           group i by new {i.Material.Id, i.Material.Name, i.Material.Description, i.Material.MOQ, i.Material.StandardCost, i.Material.SalePrice } into s
-                           select new InventorySummary {
+                           group i by new { i.Material.Id, i.Material.Name, i.Material.Description, i.Material.MOQ, i.Material.StandardCost, i.Material.SalePrice } into s
+                           select new InventorySummary
+                           {
                                Id = s.Key.Id,
                                Material = s.Key.Name,
                                Description = s.Key.Description,
                                MOQ = s.Key.MOQ,
                                StandarCost = s.Key.StandardCost,
                                SalePrice = s.Key.SalePrice,
-                               QuantityAvailable = s.Sum(i=> i.QuantityAvailable)
+                               QuantityAvailable = s.Sum(i => i.QuantityAvailable)
                            }
                 ).ToListAsync();
 
             return View(await model);
         }
-
         /// <summary>
         /// Index
         /// </summary>
         /// <returns></returns>
+        [Authorization]
         public async Task<IActionResult> Index(int id)
         {
             var item = _context.Materials.FirstOrDefault(m => m.Id == id);
@@ -58,6 +66,7 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// View create
         /// </summary>
         /// <returns></returns>
+        [Authorization]
         public IActionResult Create()
         {
             var listMaterials = _context.Materials.Where(c => c.Active == true).ToList();
@@ -74,6 +83,7 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// <param name="inventory"></param>
         /// <param name="collection"></param>
         /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SideXC.WebUI.Models.Inventory.Inventory inventory, IFormCollection collection)
@@ -87,9 +97,9 @@ namespace SideXC.WebUI.Controllers.Inventory
                 inventory.Location = location;
                 inventory.Material = material;
                 inventory.Created = DateTime.Now;
-                inventory.CreatedBy = null;//Comms:Modificar a que sea variable
+                inventory.CreatedBy = UserLogged;
                 inventory.Modified = DateTime.Now;
-                inventory.ModifiedBy = null;//Comms:Modificar a que sea variable
+                inventory.ModifiedBy = UserLogged;
                 if (modelInventory != null)
                 {
                     if (transactionType.Sign == eSign.Plus)
@@ -116,24 +126,18 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorization]
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) { return NotFound(); }
             var listMaterials = _context.Materials.Where(c => c.Active == true).ToList();
             var listWarehouse = _context.Warehouses.Where(c => c.Active == true).ToList();
             var listTransactionTypes = _context.TransactionTypes.Where(c => c.Active == true && c.IsAdjustment == true).ToList();
             ViewBag.Materials = new SelectList(listMaterials, "Id", "Description");
             ViewBag.Warehouses = new SelectList(listWarehouse, "Id", "Description");
             ViewBag.TransactionTypes = new SelectList(listTransactionTypes, "Id", "Description");
-
             var inventory = _context.Inventories.Include(m => m.Material).Include(i => i.Location).ThenInclude(h => h.Hallway).ThenInclude(w => w.Warehouse).FirstOrDefault(i => i.Id == id);
-            if (inventory == null)
-            {
-                return NotFound();
-            }
+            if (inventory == null) { return NotFound(); }
             return View(inventory);
         }
         /// <summary>
@@ -143,14 +147,12 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// <param name="inventory"></param>
         /// <param name="collection"></param>
         /// <returns></returns>
+        [Authorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, SideXC.WebUI.Models.Inventory.Inventory inventory, IFormCollection collection)
         {
-            if (id != inventory.Id)
-            {
-                return NotFound();
-            }
+            if (id != inventory.Id) { return NotFound(); }
             if (ModelState.IsValid)
             {
                 var model = _context.Inventories.Include(m => m.Material).Include(l => l.Location).ThenInclude(h => h.Hallway).ThenInclude(w => w.Warehouse).FirstOrDefault(i => i.Id == id);
@@ -161,12 +163,12 @@ namespace SideXC.WebUI.Controllers.Inventory
                 inventory = model;
                 inventory.QuantityAvailable -= QtyToMove;
                 inventory.Modified = DateTime.Now;
-                inventory.ModifiedBy = null;//Comms:Modificar a que sea variable
+                inventory.ModifiedBy = UserLogged;
                 if (modelInventory != null)
                 {
                     modelInventory.QuantityAvailable += QtyToMove;
                     modelInventory.Modified = DateTime.Now;
-                    modelInventory.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    modelInventory.ModifiedBy = UserLogged;
                     _context.Update(modelInventory);
                 }
                 else
@@ -176,9 +178,9 @@ namespace SideXC.WebUI.Controllers.Inventory
                     modelInventory.Material = material;
                     modelInventory.QuantityAvailable = QtyToMove;
                     modelInventory.Created = DateTime.Now;
-                    modelInventory.CreatedBy = null;//Comms:Modificar a que sea variable
+                    modelInventory.CreatedBy = UserLogged;
                     modelInventory.Modified = DateTime.Now;
-                    modelInventory.ModifiedBy = null;//Comms:Modificar a que sea variable
+                    modelInventory.ModifiedBy = UserLogged;
                     _context.Add(modelInventory);
                 }
                 _context.Update(inventory);
@@ -190,7 +192,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             return View(inventory);
         }
         /// <summary>
-        /// 
+        /// Ajax method get hallways
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -200,7 +202,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             return JsonConvert.SerializeObject(list);
         }
         /// <summary>
-        /// 
+        /// Ajax Method get locations
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -210,7 +212,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             return JsonConvert.SerializeObject(list);
         }
         /// <summary>
-        /// 
+        /// Ajax Method get material information
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -233,7 +235,7 @@ namespace SideXC.WebUI.Controllers.Inventory
             {
                 var transactionTypeCode = actualQty < newQty ? "II" : "DI";
                 var transactionType = _context.TransactionTypes.FirstOrDefault(t => t.Code == transactionTypeCode);
-                var model = _context.Inventories.Include(m=> m.Material).Include(l=> l.Location).FirstOrDefault(i => i.Id == id);
+                var model = _context.Inventories.Include(m => m.Material).Include(l => l.Location).FirstOrDefault(i => i.Id == id);
                 model.QuantityAvailable = newQty;
                 _context.Update(model);
                 AddTransactionLog(model.Material, model.Location, newQty, transactionType);
@@ -253,17 +255,18 @@ namespace SideXC.WebUI.Controllers.Inventory
         /// <param name="location"></param>
         /// <param name="qty"></param>
         /// <param name="transactionType"></param>        
+        [Authorization]
         public void AddTransactionLog(Material material, Location location, double qty, TransactionType transactionType)
         {
             var log = new InventoryLog()
-            {                
+            {
                 material = material,
                 Location = location,
                 TransactionType = transactionType,
                 Created = DateTime.Now,
-                CreatedBy = null,//Comms:Modificar a que sea variable
+                CreatedBy = UserLogged,
                 Modified = DateTime.Now,
-                ModifiedBy = null//Comms:Modificar a que sea variable
+                ModifiedBy = UserLogged
             };
             _context.Add(log);
             _context.SaveChanges();

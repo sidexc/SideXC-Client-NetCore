@@ -23,7 +23,7 @@ namespace SideXC.WebUI.Controllers.Security
         // GET: ClientUsers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ClientUsers.ToListAsync());
+            return View(await _context.ApplicationUsers.ToListAsync());
         }
 
         // GET: ClientUsers/Create
