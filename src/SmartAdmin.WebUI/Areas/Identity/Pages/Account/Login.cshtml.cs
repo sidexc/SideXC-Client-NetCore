@@ -72,7 +72,7 @@ namespace SideXC.WebUI.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
-                var user = await _userManager.GetUserAsync(User);
+                //var user = await _userManager.GetUserAsync(User);
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
